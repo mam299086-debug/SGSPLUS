@@ -381,17 +381,6 @@ body.dark-theme .quick-card{background:#11141d;border-color:#2b3244}.quick-card 
 
 <!-- DASHBOARD PAGE -->
 <section class="page active" id="page-dashboard">
-  <!-- MICROSECOND TICKING SERVICE INFO BOX -->
-  <div class="result-box" style="margin-bottom:18px; border-left: 4px solid var(--brand);">
-    <div style="display:flex; justify-space-between; align-items:center;">
-      <span class="eyebrow" style="font-size:11px;" data-i18n="live_info_title">⚡ LIVE SYSTEM OVERVIEW & TIPS</span>
-      <span id="microSecClock" style="font-family:monospace; font-weight:800; color:var(--brand);">00:00:00.000</span>
-    </div>
-    <div id="tickerInfoBox" style="font-size:13px; font-weight:600; margin-top:6px; min-height:22px; color:var(--text);">
-      የጋርመንት ፕላቲነም ሲስተም - ሁለንተናዊ የዲጂታል ንግድ ማኔጅመንት።
-    </div>
-  </div>
-
   <!-- GARMENT OWNER & QUICK ACTION BUTTONS BOX -->
   <div class="panel" style="margin-bottom:18px; background:linear-gradient(135deg, rgba(185,154,94,0.08), rgba(0,0,0,0.02)); border:1px solid var(--brand2);">
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
@@ -1486,37 +1475,13 @@ function startSubscriptionCountdownTimer() {
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-    const millis = Math.floor((diff % 1000));
+    const millis = 0;
 
     const pad = (n, width = 2) => String(n).padStart(width, '0');
-    document.getElementById("subCountdownTimer").textContent = `${days} ቀን ${pad(hours)}:${pad(minutes)}:${pad(seconds)}:${pad(millis, 3)}`;
+    document.getElementById("subCountdownTimer").textContent = `${days} ቀን ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
     document.getElementById("subTotalDaysLabel").textContent = `የፓኬጁ አጠቃላይ ቆይታ: ${appState.subscription.days} ቀን`;
   }, 50);
 }
-
-// MICROSECOND CLOCK & DYNAMIC TICKER INFO BOX
-const tipsArray = [
-  "የጋርመንት ፕላቲነም ሲስተም - ሁለንተናዊ የዲጂታል ንግድ ማኔጅመንት።",
-  "የእስቶክ መረጃ በኪሎ (Kg) ይስላል፤ ከመጋዘን ወደ ጋርመንት በግልጽ ይዛወራል።",
-  "ምርት በሚመረትበት ጊዜ የሚያስፈልገው ስቶክ ከሌለ ሲስተሙ አውቶማቲካሊ ይከለክላል።",
-  "የቢዝነስ ኸልዝ አላርም የእቅድዎን አፈፃፀም በቀይ እና በአረንጓዴ ብሊንክ እያደረገ ያሳያል።",
-  "ሁሉም መረጃዎች በ PDF ወይም Excel (CSV) ያለ ችግር መውረድ ይችላሉ።"
-];
-let tipIndex = 0;
-
-setInterval(() => {
-  const d = new Date();
-  const h = String(d.getHours()).padStart(2, '0');
-  const m = String(d.getMinutes()).padStart(2, '0');
-  const s = String(d.getSeconds()).padStart(2, '0');
-  const ms = String(d.getMilliseconds()).padStart(3, '0');
-  document.getElementById("microSecClock").textContent = `${h}:${m}:${s}.${ms}`;
-}, 30);
-
-setInterval(() => {
-  tipIndex = (tipIndex + 1) % tipsArray.length;
-  document.getElementById("tickerInfoBox").textContent = tipsArray[tipIndex];
-}, 10000);
 
 // CORE RENDER & CALCULATION FUNCTIONS
 function renderAllComponents() {
@@ -1668,11 +1633,9 @@ function saveStockItemModal(e) {
 }
 
 function deleteStockItem(id) {
-  if (confirm("እስቶኩን መሰረዝ ይፈልጋሉ?")) {
-    appState.stock = appState.stock.filter(s => s.id !== id);
-    saveSystemState();
-    showToast("እስቶኩ ተሰርዟል!");
-  }
+  appState.stock = appState.stock.filter(s => s.id !== id);
+  saveSystemState();
+  showToast("እስቶኩ ተሰርዟል!");
 }
 
 // TRANSFER FROM WAREHOUSE TO GARMENT
@@ -1850,11 +1813,9 @@ function saveProductionRecord(e) {
 }
 
 function deleteProduction(id) {
-  if (confirm("የምርት መዝገቡን መሰረዝ ይፈልጋሉ?")) {
-    appState.production = appState.production.filter(p => p.id !== id);
-    saveSystemState();
-    showToast("የምርት መዝገቡ ተሰርዟል!");
-  }
+  appState.production = appState.production.filter(p => p.id !== id);
+  saveSystemState();
+  showToast("የምርት መዝገቡ ተሰርዟል!");
 }
 
 // SALES & EXPENSES
@@ -1970,11 +1931,9 @@ function saveSaleRecord(e) {
 }
 
 function deleteSale(id) {
-  if (confirm("ሽያጩን መሰረዝ ይፈልጋሉ?")) {
-    appState.sales = appState.sales.filter(s => s.id !== id);
-    saveSystemState();
-    showToast("ሽያጩ ተሰርዟል!");
-  }
+  appState.sales = appState.sales.filter(s => s.id !== id);
+  saveSystemState();
+  showToast("ሽያጩ ተሰርዟል!");
 }
 
 // EXPENSES
@@ -2054,11 +2013,9 @@ function saveExpenseRecord(e) {
 }
 
 function deleteExpense(id) {
-  if (confirm("ወጪውን መሰረዝ ይፈልጋሉ?")) {
-    appState.expenses = appState.expenses.filter(e => e.id !== id);
-    saveSystemState();
-    showToast("ወጪው ተሰርዟል!");
-  }
+  appState.expenses = appState.expenses.filter(e => e.id !== id);
+  saveSystemState();
+  showToast("ወጪው ተሰርዟል!");
 }
 
 // OTHER DIRECTORIES (PRODUCTS, ORDERS, CUSTOMERS, SUPPLIERS, EMPLOYEES)
@@ -2725,7 +2682,7 @@ function renderProductionTable(){
   const pc=document.getElementById("productionProfitPercent");if(pc){pc.textContent=(cost?profit/cost*100:0).toFixed(2)+"%";pc.className="stat-value "+(profit<0?"negative":"positive");}
 }
 function deleteProduction(id){
-  const p=appState.production.find(x=>x.id===id);if(!p||!confirm(tLabel("ይህን የምርት መዝገብ ይሰረዝ?","Delete this production record?")))return;
+  const p=appState.production.find(x=>x.id===id);if(!p)return;
   const st=appState.stock.find(x=>x.id===p.stockId);if(st)st.qtyKg=(Number(st.qtyKg)||0)+(Number(p.usedStockKg)||0);
   appState.production=appState.production.filter(x=>x.id!==id);saveSystemState();
 }
@@ -2748,7 +2705,7 @@ function openSalesModal(editId=null){
   <div class="field full"><div class="calc-grid"><div class="calc"><span>${tLabel("የተሸጠ ፍሬ ብዛት","Pieces sold")}</span><strong id="salePiecesBox">0</strong></div><div class="calc"><span>${tLabel("አጠቃላይ ዋጋ","Total")}</span><strong id="saleTotalBox">0 ETB</strong></div><div class="calc"><span>${tLabel("ትርፍ / ኪሳራ","Profit / loss")}</span><strong id="saleProfitBox">0 ETB</strong></div><div class="calc"><span>${tLabel("ትርፍ %","Profit %")}</span><strong id="salePercentBox">0%</strong></div></div></div>
   <div class="field full"><button type="submit" class="btn primary">${old?tLabel("አብዴት አድርግ","Update sale"):tLabel("ሽያጭ መዝግብ","Save sale")}</button></div></form>`;
   openAppModal(old?tLabel("ሽያጭ አስተካክል","Edit sale"):tLabel("አዲስ ሽያጭ","New sale"),html);
-  if(old){document.getElementById("saleProductId").value=appState.products.find(p=>p.name===old.productName)?.id||"";document.getElementById("saleUnit").value=old.saleUnit||"piece";document.getElementById("salePayment").value=old.paymentMethod||"Cash";document.getElementById("salePaid").value=old.paidStatus||"paid";document.getElementById("saleCustName").value=old.customerName||"";}
+  if(old){document.getElementById("saleProductId").value=appState.products.find(p=>p.name===old.productName)?.id||"";document.getElementById("saleUnit").value=old.saleUnit||"piece";document.getElementById("salePayment").value=old.paymentMethod||"Cash";document.getElementById("salePaid").value=(String(old.paidStatus||old.paymentStatus||"unpaid").toLowerCase()==="paid"?"paid":"unpaid");document.getElementById("saleCustName").value=old.customerName||"";}
   else {const p=appState.products[0];if(p){document.getElementById("saleProductId").value=p.id;document.getElementById("saleUnitPrice").value=p.unitPrice;document.getElementById("saleUnitCost").value=p.avgUnitCost||0;}}
   calculateSaleTotal();
 }
@@ -2763,18 +2720,20 @@ function saveSaleRecord(e,editId=""){
   const qty=parseFloat(document.getElementById("saleQty").value)||0,unit=document.getElementById("saleUnit").value,pieces=qty*(unit==="dozen"?12:1),unitPrice=parseFloat(document.getElementById("saleUnitPrice").value)||0,unitCost=parseFloat(document.getElementById("saleUnitCost").value)||0;
   const available=availableProductQty(p?.name||"")+(old?Number(old.qty)||0:0);
   if(!p||qty<=0||pieces>available){showToast(tLabel("የተመረጠው ምርት በቂ እስቶክ የለውም","Insufficient finished-product stock"));return;}
-  const totalPrice=pieces*unitPrice,profit=totalPrice-pieces*unitCost,method=document.getElementById("salePayment").value,paidStatus=method==="Credit"?document.getElementById("salePaid").value:"paid";
+  const totalPrice=pieces*unitPrice,profit=totalPrice-pieces*unitCost,method=document.getElementById("salePayment").value,paidStatus=method==="Credit"?(document.getElementById("salePaid").value==="paid"?"paid":"unpaid"):"paid";
   const sale={id:editId||"sale_"+Date.now(),date:document.getElementById("saleDate").value,customerName:document.getElementById("saleCustName").value||"Cash Customer",productName:p.name,productId:p.id,qty:pieces,displayQty:qty,saleUnit:unit,unitPrice,unitCost,totalPrice,profit,paymentMethod:method,paidStatus,phone:document.getElementById("salePhone").value.trim(),address:document.getElementById("saleAddress").value.trim()};
   if(old)appState.sales=appState.sales.map(x=>x.id===editId?sale:x);else appState.sales.push(sale);
   appState.walletLogs=appState.walletLogs||[];appState.walletLogs.push({date:sale.date,type:"Sales Income",desc:`${sale.productName} (${pieces} Pcs)`,amount:totalPrice});
   saveSystemState();closeAppModal();showToast(tLabel(old?"ሽያጩ ተዘምኗል":"ሽያጩ ተመዝግቧል",old?"Sale updated":"Sale saved"));
 }
+function saleIsCredit(s){return String(s?.paymentMethod||s?.paymentType||'').trim().toLowerCase()==='credit'||String(s?.paymentMethod||s?.paymentType||'').includes('ዱቤ');}
+function saleIsPaid(s){if(!saleIsCredit(s))return true;return String(s?.paidStatus||s?.paymentStatus||'unpaid').trim().toLowerCase()==='paid';}
 function renderSalesTable(){
   const tbody=document.getElementById("salesTableBody");if(!tbody)return;tbody.innerHTML="";
-  appState.sales.forEach(s=>{const tr=document.createElement("tr"),credit=s.paymentMethod==="Credit"&&s.paidStatus!=="paid";tr.innerHTML=`<td>${s.date}</td><td>${s.customerName||"-"}</td><td>${s.productName}</td><td>${s.qty} Pcs</td><td>${Number(s.unitPrice||0).toFixed(2)} ETB</td><td><strong>${Number(s.totalPrice||0).toFixed(2)} ETB</strong></td><td><strong class="${s.profit<0?'negative':'positive'}">${Number(s.profit||0).toFixed(2)} ETB</strong></td><td>${s.paymentMethod||"Cash"}</td><td>${s.phone||"-"}</td><td>${s.address||"-"}</td><td>${credit?`<button class="btn sm danger" onclick="markSalePaid('${s.id}')">🔴 ${tLabel("ዱቤ","Credit")} · ${tLabel("ያልተከፈለ","Unpaid")}</button>`:`<span class="badge">${tLabel("ተከፍሏል","Paid")}</span>`}</td><td><button class="btn sm" onclick="openSalesModal('${s.id}')">✏️ ${tLabel("ኤዲት","Edit")}</button> <button class="btn sm danger" onclick="deleteSale('${s.id}')">🗑️</button></td>`;if(credit)tr.style.background="#ffe5e5";tbody.appendChild(tr);});
+  appState.sales.forEach(s=>{const tr=document.createElement("tr"),credit=saleIsCredit(s),paid=saleIsPaid(s);tr.innerHTML=`<td>${s.date}</td><td>${s.customerName||"-"}</td><td>${s.productName}</td><td>${s.qty} Pcs</td><td>${Number(s.unitPrice||0).toFixed(2)} ETB</td><td><strong>${Number(s.totalPrice||0).toFixed(2)} ETB</strong></td><td><strong class="${s.profit<0?'negative':'positive'}">${Number(s.profit||0).toFixed(2)} ETB</strong></td><td>${s.paymentMethod||"Cash"}</td><td>${s.phone||"-"}</td><td>${s.address||"-"}</td><td>${paid?`<span class="badge" style="background:#dff7e8;color:#168653;border:1px solid #8ed8aa;font-weight:900">🟢 ${tLabel("ተከፍሏል","Paid")}</span>`:`<button class="btn sm danger" style="background:#c73745;color:#fff;border-color:#c73745;font-weight:900" onclick="markSalePaid('${s.id}')">🔴 ${tLabel("ዱቤ","Credit")} · ${tLabel("ያልተከፈለ","Unpaid")}</button>`}</td><td><button class="btn sm" onclick="openSalesModal('${s.id}')">✏️ ${tLabel("ኤዲት","Edit")}</button> <button class="btn sm danger" onclick="deleteSale('${s.id}')">🗑️</button></td>`;if(!paid)tr.style.background="#ffe5e5";tbody.appendChild(tr);});
 }
-function markSalePaid(id){const s=appState.sales.find(x=>x.id===id);if(s){s.paidStatus="paid";saveSystemState();}}
-function deleteSale(id){if(!confirm(tLabel("ይህን ሽያጭ ይሰረዝ?","Delete this sale?")))return;appState.sales=appState.sales.filter(s=>s.id!==id);saveSystemState();}
+function markSalePaid(id){const s=appState.sales.find(x=>x.id===id);if(s){s.paidStatus="paid";s.paymentStatus="paid";saveSystemState();renderSalesTable();showToast(tLabel("ክፍያው ተከፍሏል ተብሎ ተመዝግቧል።","Payment marked as paid."));}}
+function deleteSale(id){appState.sales=appState.sales.filter(s=>s.id!==id);saveSystemState();renderSalesTable();}
 function renderProductsTable(){
   const tbody=document.getElementById("productsTableBody");if(!tbody)return;tbody.innerHTML="";
   appState.products.forEach(p=>{const produced=sumBy(appState.production,x=>x.productName===p.name?x.quantity:0),sold=sumBy(appState.sales,x=>x.productName===p.name?x.qty:0),left=Math.max(0,produced-sold),tr=document.createElement("tr");tr.innerHTML=`<td>${p.name}</td><td>${p.category||"-"}</td><td>${Number(p.unitPrice||0).toFixed(2)} ETB</td><td>${produced} Pcs</td><td>${sold} Pcs</td><td><strong class="${left<=0?'negative':'positive'}">${left} Pcs</strong></td><td><button class="btn sm" onclick="openProductModal('${p.id}')">✏️ ${tLabel("ኤዲት","Edit")}</button> <button class="btn sm danger" onclick="deleteProduct('${p.id}')">🗑️</button></td>`;tbody.appendChild(tr);});
@@ -2790,7 +2749,7 @@ function saveProductItem(e,editId=""){
   else{const existing=appState.products.find(p=>p.name.trim().toLowerCase()===name.toLowerCase());if(existing){existing.category=category;existing.unitPrice=unitPrice;}else appState.products.push({id:"prod_type_"+Date.now(),name,category,unitPrice});}
   saveSystemState();closeAppModal();showToast(tLabel("የምርት መረጃ ተቀምጧል","Product saved"));
 }
-function deleteProduct(id){const p=appState.products.find(x=>x.id===id);if(!p)return;if(appState.production.some(x=>x.productName===p.name)||appState.sales.some(x=>x.productName===p.name)){showToast(tLabel("ይህ ምርት በምርት/ሽያጭ መዝገብ ስለሚጠቀም መሰረዝ አይቻልም","This product is used by production or sales records and cannot be deleted"));return;}if(confirm(tLabel("ምርቱን ይሰረዝ?","Delete product?"))){appState.products=appState.products.filter(x=>x.id!==id);saveSystemState();}}
+function deleteProduct(id){const p=appState.products.find(x=>x.id===id);if(!p)return;if(appState.production.some(x=>x.productName===p.name)||appState.sales.some(x=>x.productName===p.name)){showToast(tLabel("ይህ ምርት በምርት/ሽያጭ መዝገብ ስለሚጠቀም መሰረዝ አይቻልም","This product is used by production or sales records and cannot be deleted"));return;}appState.products=appState.products.filter(x=>x.id!==id);saveSystemState();}
 
 </script>
 
@@ -2836,7 +2795,7 @@ const opDefs={
 };
 function editDirectoryRecord(type,id){const d=opDefs[type];if(!d)return;const old=(appState[d.arr]||[]).find(x=>x.id===id);if(!old)return;let fields=d.fields.map(f=>{let val=old[f[0]]??'';if(f[0]==='costUnit')val=old.costUnit??old.unitCost??0;let input=f[3]==='select'?(f[0]==='payCycle'?`<select id="op_${f[0]}"><option ${val==='Weekly'?'selected':''} value="Weekly">Weekly</option><option ${val==='Monthly'?'selected':''} value="Monthly">Monthly</option></select>`:`<select id="op_${f[0]}"><option ${val==='Pending'?'selected':''} value="Pending">Pending</option><option ${val==='In Progress'?'selected':''} value="In Progress">In Progress</option><option ${val==='Completed'?'selected':''} value="Completed">Completed</option><option ${val==='Cancelled'?'selected':''} value="Cancelled">Cancelled</option></select>`):`<input id="op_${f[0]}" type="${f[3]}" ${f[3]==='number'?'min="0" step="0.01"':''} value="${opEsc(val)}" ${['name','phone','date','customerName','productName','qty','unitPrice','salary'].includes(f[0])?'required':''}>`;return `<div class="field"><label>${opT(f[1],f[2])}</label>${input}</div>`;}).join('');let html=`<form class="form-grid" onsubmit="saveDirectoryRecord(event,'${type}','${id}')">${fields}<div class="field full"><button class="btn primary" type="submit">💾 ${opT('ለውጡን አስቀምጥ','Save changes')}</button></div></form>`;openAppModal(opT(d.title[0]+' አስተካክል','Edit '+d.title[1]),html);}
 function saveDirectoryRecord(e,type,id){e.preventDefault();const d=opDefs[type],arr=appState[d.arr],obj=arr.find(x=>x.id===id);if(!obj)return;d.fields.forEach(f=>{const el=document.getElementById('op_'+f[0]);if(el)obj[f[0]]=f[3]==='number'?(Number(el.value)||0):el.value.trim();});if(type==='orders'){obj.totalPrice=(Number(obj.qty)||0)*(Number(obj.unitPrice)||0);obj.profit=obj.totalPrice-(Number(obj.qty)||0)*(Number(obj.costUnit??obj.unitCost)||0);}saveSystemState();closeAppModal();showToast(opT('መረጃው ተሻሽሏል','Record updated'));}
-function deleteDirectoryRecord(type,id){const d=opDefs[type];if(!d)return;if(!confirm(opT('ይህን መዝገብ ለመሰረዝ እርግጠኛ ነዎት?','Are you sure you want to delete this record?')))return;appState[d.arr]=(appState[d.arr]||[]).filter(x=>x.id!==id);saveSystemState();showToast(opT('መዝገቡ ተሰርዟል','Record deleted'));}
+function deleteDirectoryRecord(type,id){const d=opDefs[type];if(!d)return;appState[d.arr]=(appState[d.arr]||[]).filter(x=>x.id!==id);saveSystemState();showToast(opT('መዝገቡ ተሰርዟል','Record deleted'));}
 function renderCustomersTable(){const b=document.getElementById('customersTableBody');if(!b)return;b.innerHTML=(appState.customers||[]).map(c=>`<tr><td>${opEsc(c.name)}</td><td>${opEsc(c.phone)}</td><td>${opEsc(c.address)}</td><td>${opActions('customers',c.id)}</td></tr>`).join('');}
 function renderSuppliersTable(){const b=document.getElementById('suppliersTableBody');if(!b)return;b.innerHTML=(appState.suppliers||[]).map(c=>`<tr><td>${opEsc(c.name)}</td><td>${opEsc(c.phone)}</td><td>${opEsc(c.material)}</td><td>${opEsc(c.address)}</td><td>${opActions('suppliers',c.id)}</td></tr>`).join('');}
 function renderEmployeesTable(){const b=document.getElementById('employeesTableBody');if(!b)return;b.innerHTML=(appState.employees||[]).map(c=>`<tr><td>${opEsc(c.name)}</td><td>${opEsc(c.phone)}</td><td>${opEsc(c.role)}</td><td>${opEsc(c.payCycle)}</td><td>${opMoney(c.salary)}</td><td>${opActions('employees',c.id)}</td></tr>`).join('');}
@@ -2855,7 +2814,7 @@ function renderOpsAnalytics(){const dash=document.getElementById('page-dashboard
 function renderAccountantPage(){const totRev=(appState.sales||[]).reduce((a,s)=>a+(Number(s.totalPrice)||0),0),totExp=(appState.expenses||[]).reduce((a,e)=>a+(Number(e.amount)||0),0),netProf=totRev-totExp;[['accRev',totRev],['accExp',totExp],['accNet',netProf],['accTax',netProf>0?netProf*.15:0]].forEach(([id,v])=>{const el=document.getElementById(id);if(el)el.textContent=opMoney(v)});const b=document.getElementById('accountantTaskBody');if(!b)return;b.innerHTML=(appState.accountantTasks||[]).map(t=>`<tr><td>${opEsc(t.date)}</td><td><strong>${opEsc(t.title)}</strong></td><td>${opEsc(t.desc)}</td><td><span class="badge warn">${opEsc(t.status)}</span></td><td><button class="btn sm" onclick="editAccountantTask('${t.id}')">✏️ ${opT('አስተካክል','Edit')}</button> <button class="btn sm danger" onclick="deleteAccountantTask('${t.id}')">🗑️ ${opT('ሰርዝ','Delete')}</button></td></tr>`).join('');}
 function editAccountantTask(id){const t=(appState.accountantTasks||[]).find(x=>x.id===id);if(!t)return;const html=`<form class="form-grid" onsubmit="saveEditedAccountantTask(event,'${id}')"><div class="field"><label>${opT('ርዕስ','Title')}</label><input id="opTaskTitle" required value="${opEsc(t.title)}"></div><div class="field"><label>${opT('የመጨረሻ ቀን','Due date')}</label><input id="opTaskDue" type="date" value="${opEsc(t.dueDate||'')}"></div><div class="field full"><label>${opT('መግለጫ','Description')}</label><textarea id="opTaskDesc">${opEsc(t.desc||'')}</textarea></div><div class="field"><label>${opT('ሁኔታ','Status')}</label><select id="opTaskStatus"><option ${t.status==='Pending Review'?'selected':''}>Pending Review</option><option ${t.status==='In Progress'?'selected':''}>In Progress</option><option ${t.status==='Completed'?'selected':''}>Completed</option></select></div><div class="field full"><button class="btn primary" type="submit">💾 ${opT('አስቀምጥ','Save')}</button></div></form>`;openAppModal(opT('ታስክ አስተካክል','Edit task'),html);}
 function saveEditedAccountantTask(e,id){e.preventDefault();const t=appState.accountantTasks.find(x=>x.id===id);if(!t)return;t.title=document.getElementById('opTaskTitle').value.trim();t.dueDate=document.getElementById('opTaskDue').value;t.desc=document.getElementById('opTaskDesc').value.trim();t.status=document.getElementById('opTaskStatus').value;saveSystemState();closeAppModal();}
-function deleteAccountantTask(id){if(!confirm(opT('ይህን ታስክ ይሰረዝ?','Delete this task?')))return;appState.accountantTasks=appState.accountantTasks.filter(x=>x.id!==id);saveSystemState();}
+function deleteAccountantTask(id){appState.accountantTasks=appState.accountantTasks.filter(x=>x.id!==id);saveSystemState();}
 
 const _opRenderAll=renderAllComponents;renderAllComponents=function(){try{if(typeof _opRenderAll==='function')_opRenderAll();}catch(e){console.warn(e)}try{renderOpsAnalytics();injectServiceTools();}catch(e){console.warn('Analytics render',e)}};
 const _opSaveSystemState=saveSystemState;saveSystemState=function(){const r=_opSaveSystemState.apply(this,arguments);try{renderOpsAnalytics();injectServiceTools();}catch(e){}return r;};
@@ -3095,7 +3054,7 @@ document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{try{addStyles()
     if(typeof saveSystemState==='function')saveSystemState();else localStorage.setItem('clickpaye_garment_platinum_state',JSON.stringify(appState));
     closeAppModal();renderCuttingTable();if(typeof renderProductionTable==='function')renderProductionTable();if(typeof renderProductsTable==='function')renderProductsTable();if(typeof showToast==='function')showToast(t('የቆረጣ መረጃ ተመዝግቧል፤ እስቶክና ፕሮዳክሽን ተዘምነዋል።','Cutting saved; stock and production updated.'));
   };
-  window.deleteCuttingRecord=function(id){const c=(appState.cutting||[]).find(x=>x.id===id);if(!c)return;if(!confirm(t('ይህን የቆረጣ መዝገብ ለመሰረዝ እና ከእስቶክ የተቀነሰውን ኪሎ ለመመለስ እርግጠኛ ነዎት?','Delete this cutting batch and return its fabric kilograms to stock?')))return;const st=(appState.stock||[]).find(x=>x.id===c.stockId);if(st)st.qtyKg=num(st.qtyKg)+num(c.totalKg);const cutProduct=(appState.products||[]).find(x=>x.id===c.productId)||productByName(c.productName);if(cutProduct)cutProduct.cutStockQty=Math.max(0,num(cutProduct.cutStockQty)-num(c.totalQty));appState.production=(appState.production||[]).filter(p=>p.sourceCuttingId!==id);appState.cutting=appState.cutting.filter(x=>x.id!==id);saveSystemState();renderCuttingTable();if(typeof showToast==='function')showToast(t('የቆረጣ መዝገቡ ተሰርዟል፤ ኪሎው ወደ እስቶክ ተመልሷል።','Cutting deleted; fabric kg returned to stock.'));};
+  window.deleteCuttingRecord=function(id){const c=(appState.cutting||[]).find(x=>x.id===id);if(!c)return;const st=(appState.stock||[]).find(x=>x.id===c.stockId);if(st)st.qtyKg=num(st.qtyKg)+num(c.totalKg);const cutProduct=(appState.products||[]).find(x=>x.id===c.productId)||productByName(c.productName);if(cutProduct)cutProduct.cutStockQty=Math.max(0,num(cutProduct.cutStockQty)-num(c.totalQty));appState.production=(appState.production||[]).filter(p=>p.sourceCuttingId!==id);appState.cutting=appState.cutting.filter(x=>x.id!==id);saveSystemState();renderCuttingTable();if(typeof showToast==='function')showToast(t('የቆረጣ መዝገቡ ተሰርዟል፤ ኪሎው ወደ እስቶክ ተመልሷል።','Cutting deleted; fabric kg returned to stock.'));};
   window.renderCuttingTable=function(){const body=$('cuttingTableBody');if(!body)return;const rows=(appState.cutting||[]).slice().sort((a,b)=>String(b.date).localeCompare(String(a.date)));body.innerHTML=rows.map(c=>`<tr><td>${safe(c.date)}</td><td>${safe(c.fabricName)}</td><td><strong>${safe(c.productName)}</strong></td><td>${safe(c.category)}</td><td>${num(c.layers)}</td><td>${num(c.qtyPerLayer)}</td><td><strong>${num(c.totalQty).toLocaleString()} pcs</strong></td><td>${num(c.totalKg).toFixed(3)} kg</td><td>${(num(c.totalKg)?num(c.totalQty)/num(c.totalKg):0).toFixed(4)} pcs/kg</td><td>${num(c.materialCost).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})} ETB</td><td class="cutting-action"><button class="btn sm" onclick="openCuttingModal('${safe(c.id)}')">✏️ ${t('ኤዲት','Edit')}</button> <button class="btn sm danger" onclick="deleteCuttingRecord('${safe(c.id)}')">🗑️ ${t('ዴሊት','Delete')}</button></td></tr>`).join('')||`<tr><td colspan="11">${t('ገና የቆረጣ መዝገብ የለም። አዲስ ቆረጣ ሲመዘገብ እዚህ ይታያል።','No cutting records yet. New cutting batches will appear here.')}</td></tr>`;
     const totalQty=(appState.cutting||[]).reduce((s,x)=>s+num(x.totalQty),0),totalKg=(appState.cutting||[]).reduce((s,x)=>s+num(x.totalKg),0),cost=(appState.cutting||[]).reduce((s,x)=>s+num(x.materialCost),0);const set=(id,v)=>{if($(id))$(id).textContent=v;};set('cutCount',(appState.cutting||[]).length.toLocaleString());set('cutUnits',totalQty.toLocaleString()+' pcs');set('cutKg',totalKg.toFixed(3)+' kg');set('cutCost',cost.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})+' ETB');
   };
@@ -3183,7 +3142,7 @@ const oldCutSave=window.saveCuttingRecord;window.saveCuttingRecord=function(e,id
 function ensureSewingPage(){if(!$('page-sewing')){const sec=document.createElement('section');sec.className='page';sec.id='page-sewing';sec.innerHTML=`<div class="section-head"><div><h2>🪡 ${T('የስፌት መስመር ክትትል','Sewing Line Control')}</h2><p>${T('ወደ ስፌት የገባ፣ ተጠናቆ የወጣ፣ ቀሪ ብዛትና የምርት ዋጋ በየቀኑ ይከታተሉ።','Track line input, completed garments, remaining work, and catalog-based product value daily.')}</p></div><div class="btn-row no-print"><button class="btn primary" onclick="sgcOpenSewingModal()">＋ ${T('አዲስ የስፌት መዝገብ','New sewing entry')}</button><button class="btn" onclick="printServiceReport('page-sewing')">🖨️ Print</button><button class="btn" onclick="sgcExportSewing()">📊 Excel / CSV</button></div></div><div class="sgc-pro-panel"><div class="form-grid"><div class="field"><label>${T('የሪፖርት ቀን','Report date')}</label><input type="date" id="sgcSewDate" value="${today()}" onchange="sgcRenderSewing()"></div><div class="field"><label>${T('የቀን ታርጌት (ፍሬ)','Daily target (pcs)')}</label><input type="number" id="sgcSewTarget" min="0" value="${n(appState.settings.sewingTarget)||500}" onchange="sgcSaveSewTarget()"></div></div><div id="sgcSewKPIs" class="sgc-pro-grid"></div><div id="sgcSewTargetStatus"></div></div><div class="sgc-pro-panel"><h3>${T('የስፌት ዕለታዊ መዝገብ','Daily sewing register')}</h3><div class="table-wrap"><table><thead><tr><th>Date</th><th>Product</th><th>Category</th><th>Line in</th><th>Completed</th><th>Remaining</th><th>Unit price</th><th>Completed value</th><th>Actions</th></tr></thead><tbody id="sgcSewBody"></tbody></table></div></div>`;const content=document.querySelector('#businessApp .content');content?.appendChild(sec);}const nav=document.querySelector('.sidebar .nav-btn[onclick*="production"]');if(nav&&!document.querySelector('.sidebar .nav-btn[onclick*="sewing"]')){const b=document.createElement('button');b.className='nav-btn';b.setAttribute('onclick',"switchPage('sewing')");b.innerHTML='<span class="nav-icon">🪡</span> <span>'+T('የስፌት መስመር','Sewing Line')+'</span>';nav.insertAdjacentElement('afterend',b);}}
 window.sgcOpenSewingModal=function(id=''){const old=(appState.sewing||[]).find(x=>x.id===id),products=(appState.products||[]).map(p=>`<option value="${esc(p.id)}">${esc(p.name)} — ${n(p.unitPrice).toFixed(2)} ETB/pc</option>`).join('');const html=`<form class="form-grid" onsubmit="sgcSaveSewing(event,'${esc(id)}')"><div class="field"><label>Date</label><input type="date" id="sgcSDate" value="${esc(old?.date||today())}" required></div><div class="field"><label>Product / የምርት ስም</label><select id="sgcSProduct" required>${products}</select></div><div class="field"><label>Category</label><input id="sgcSCategory" value="${esc(old?.category||'') }" required placeholder="e.g. Men T-shirt"></div><div class="field"><label>Quantity entered into line</label><input type="number" min="0" id="sgcSIn" value="${n(old?.lineIn)}" required></div><div class="field"><label>Completed quantity</label><input type="number" min="0" id="sgcSComplete" value="${n(old?.completed)}" required></div><div class="field full"><p>${T('የአንድ ምርት ዋጋ ከProducts ካታሎግ በራስ-ሰር ይወሰዳል።','Unit price is pulled from the Products catalog.')}</p></div><div class="field full"><button class="btn primary" type="submit">💾 Save sewing entry</button></div></form>`;openAppModal(old?'Edit sewing entry':'New sewing entry',html);if(old)$('sgcSProduct').value=old.productId;};
 window.sgcSaveSewing=function(e,id){e.preventDefault();const p=(appState.products||[]).find(x=>x.id===$('sgcSProduct').value),date=$('sgcSDate').value,lineIn=Math.floor(n($('sgcSIn').value)),completed=Math.floor(n($('sgcSComplete').value));if(!p||!date||lineIn<0||completed<0||completed>lineIn){showToast(T('የስፌት ብዛትን ያረጋግጡ፤ የተጠናቀቀው ከገባው በላይ መሆን አይችልም።','Check quantities: completed cannot exceed line-in quantity.'));return;}const rec={id:id||'sew_'+Date.now(),date,productId:p.id,productName:p.name,category:$('sgcSCategory').value.trim(),lineIn,completed,remaining:lineIn-completed,unitPrice:n(p.unitPrice),completedValue:completed*n(p.unitPrice)};if(id)appState.sewing=appState.sewing.map(x=>x.id===id?rec:x);else appState.sewing.push(rec);saveSystemState();closeAppModal();sgcRenderSewing();showToast('Sewing record saved.');};
-window.sgcDeleteSewing=function(id){if(!confirm(T('ይህን የስፌት መዝገብ ይሰረዝ?','Delete this sewing record?')))return;appState.sewing=appState.sewing.filter(x=>x.id!==id);saveSystemState();sgcRenderSewing();};
+window.sgcDeleteSewing=function(id){appState.sewing=appState.sewing.filter(x=>x.id!==id);saveSystemState();sgcRenderSewing();};
 window.sgcSaveSewTarget=function(){appState.settings.sewingTarget=Math.max(0,n($('sgcSewTarget')?.value));saveSystemState();sgcRenderSewing();};
 window.sgcRenderSewing=function(){const date=$('sgcSewDate')?.value||today(),rows=(appState.sewing||[]).filter(x=>x.date===date),ins=rows.reduce((s,x)=>s+n(x.lineIn),0),done=rows.reduce((s,x)=>s+n(x.completed),0),remaining=rows.reduce((s,x)=>s+n(x.remaining),0),value=rows.reduce((s,x)=>s+n(x.completedValue),0),target=n(appState.settings.sewingTarget)||500,pct=target?done/target*100:0;const k=$('sgcSewKPIs');if(k)k.innerHTML=[[T('ወደ መስመር የገባ','Line in'),ins+' pcs'],[T('ተጠናቆ የወጣ','Completed'),done+' pcs'],[T('ቀሪ ስራ','Work remaining'),remaining+' pcs'],[T('የተጠናቀቀ ዋጋ','Completed value'),value.toLocaleString(undefined,{maximumFractionDigits:2})+' ETB']].map(x=>`<div class="sgc-pro-kpi"><small>${x[0]}</small><strong>${x[1]}</strong></div>`).join('');const ts=$('sgcSewTargetStatus');if(ts)ts.innerHTML=`<div class="sgc-pro-panel ${pct>=100?'':'sgc-red'}"><strong class="${pct<100?'sgc-blink':''}">${pct>=100?'🟢':'🔴'} ${T('የቀን ታርጌት አፈፃፀም','Daily target progress')}: ${Math.min(100,pct).toFixed(1)}%</strong><div class="sgc-targetbar"><span style="width:${Math.min(100,pct)}%;${pct<100?'background:#d72d3b':''}"></span></div><p>${T('ታርጌት','Target')}: ${target} pcs · ${T('የተጠናቀቀ','Completed')}: ${done} pcs ${pct<100?T('— ታርጌቱ አልተሳካም።','— target not achieved yet.'):T('— ታርጌቱ ተሳክቷል።','— target achieved.')}</p></div>`;const body=$('sgcSewBody');if(body)body.innerHTML=rows.map(x=>`<tr><td>${esc(x.date)}</td><td>${esc(x.productName)}</td><td>${esc(x.category)}</td><td>${n(x.lineIn)}</td><td>${n(x.completed)}</td><td>${n(x.remaining)}</td><td>${n(x.unitPrice).toFixed(2)} ETB</td><td>${n(x.completedValue).toFixed(2)} ETB</td><td><button class="btn sm" onclick="sgcOpenSewingModal('${esc(x.id)}')">Edit</button> <button class="btn sm danger" onclick="sgcDeleteSewing('${esc(x.id)}')">Delete</button></td></tr>`).join('')||'<tr><td colspan="9">No sewing entries for this date.</td></tr>';};
 window.sgcExportSewing=function(){const rows=[['Date','Product','Category','Line in','Completed','Remaining','Unit price ETB','Completed value ETB'],...(appState.sewing||[]).map(x=>[x.date,x.productName,x.category,x.lineIn,x.completed,x.remaining,x.unitPrice,x.completedValue])];const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`SGC_Sewing_${today()}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
@@ -3263,7 +3222,7 @@ window.sgcSaveSewing=function(e,id){
  if(id)appState.sewing=appState.sewing.map(x=>x.id===id?rec:x);else appState.sewing.push(rec);
  saveSystemState();closeAppModal();sgcRenderSewing();refreshFinishedDashboard();refreshSewingStockOptions();showToast(tr('የስፌት መዝገብ ተመዝግቧል፤ የቆረጣና ያለቀለት ስቶክ ተዘምኗል።','Sewing saved; cut-piece and finished stock updated.'));
 };
-window.sgcDeleteSewing=function(id){const old=(appState.sewing||[]).find(x=>x.id===id);if(!old)return;if(!confirm(tr('ይህን የስፌት መዝገብ ይሰረዝ? የቆረጣ ስቶክ ይመለሳል።','Delete this sewing record and restore cut-piece stock?')))return;const p=(appState.products||[]).find(x=>x.id===old.productId);if(p){p.cutStockQty=Math.max(0,N(p.cutStockQty)+N(old.lineIn));p.finishedStockQty=Math.max(0,N(p.finishedStockQty)-N(old.completed));}appState.sewing=appState.sewing.filter(x=>x.id!==id);saveSystemState();sgcRenderSewing();refreshFinishedDashboard();refreshSewingStockOptions();};
+window.sgcDeleteSewing=function(id){const old=(appState.sewing||[]).find(x=>x.id===id);if(!old)return;const p=(appState.products||[]).find(x=>x.id===old.productId);if(p){p.cutStockQty=Math.max(0,N(p.cutStockQty)+N(old.lineIn));p.finishedStockQty=Math.max(0,N(p.finishedStockQty)-N(old.completed));}appState.sewing=appState.sewing.filter(x=>x.id!==id);saveSystemState();sgcRenderSewing();refreshFinishedDashboard();refreshSewingStockOptions();};
 
 // Sewing report can be viewed as individual daily entries or grouped hourly totals.
 const prevEnsurePage=window.ensureSewingPage;
@@ -3357,7 +3316,7 @@ window.sgcSaveSewing=function(e,id){
  applyInventory(rec);if(id)appState.sewing=sewing().map(x=>x.id===id?rec:x);else sewing().push(rec);
  saveSystemState();closeAppModal();window.sgcRenderSewing();if(typeof refreshFinishedDashboard==='function')refreshFinishedDashboard();if(typeof refreshSewingStockOptions==='function')refreshSewingStockOptions();showToast(tr('መዝገቡ ተቀምጧል፤ ስቶክና የምርት ዋጋ ተዘምነዋል።','Entry saved; inventory and finished stock updated.'));
 };
-window.sgcDeleteSewing=function(id){const old=sewing().find(x=>x.id===id);if(!old)return;if(!confirm(tr('ይህን መዝገብ መሰረዝ ይፈልጋሉ?','Delete this sewing entry?')))return;reverseInventory(old);appState.sewing=sewing().filter(x=>x.id!==id);saveSystemState();window.sgcRenderSewing();if(typeof refreshFinishedDashboard==='function')refreshFinishedDashboard();if(typeof refreshSewingStockOptions==='function')refreshSewingStockOptions();};
+window.sgcDeleteSewing=function(id){const old=sewing().find(x=>x.id===id);if(!old)return;reverseInventory(old);appState.sewing=sewing().filter(x=>x.id!==id);saveSystemState();window.sgcRenderSewing();if(typeof refreshFinishedDashboard==='function')refreshFinishedDashboard();if(typeof refreshSewingStockOptions==='function')refreshSewingStockOptions();};
 const prevRender=window.sgcRenderSewing;
 window.sgcRenderSewing=function(){if(typeof prevRender==='function')prevRender();const page=$('page-sewing');if(!page)return;const date=$('sgcSewDate')?.value||todaySafe(),all=sewing(),rows=all.filter(x=>x.date===date),ins=rows.reduce((s,x)=>s+N(x.lineIn),0),done=rows.reduce((s,x)=>s+N(x.completed),0),finishedValue=rows.reduce((s,x)=>s+N(x.completedValue),0),totalRemaining=products().reduce((s,p)=>s+Math.max(0,outstanding(p.id)),0),remainingValue=products().reduce((s,p)=>s+Math.max(0,outstanding(p.id))*N(p.unitPrice),0),lineValue=rows.reduce((s,x)=>s+N(x.lineIn)*N(x.unitPrice),0);
  const k=$('sgcSewKPIs');if(k){const cards=[[tr('ወደ መስመር የገባ ብዛት','Line-in quantity'),ins.toLocaleString()+' pcs'],[tr('ወደ መስመር የገባ ዋጋ','Line-in value'),money(lineValue)],[tr('ያለቀ / የታሸገ ብዛት','Finished & packed quantity'),done.toLocaleString()+' pcs'],[tr('ያለቀ / የታሸገ ዋጋ','Finished & packed value'),money(finishedValue)],[tr('መስመር ላይ የቀረ ብዛት','Work remaining quantity'),totalRemaining.toLocaleString()+' pcs'],[tr('የቀረ ስራ ዋጋ','Remaining work value'),money(remainingValue)]];k.innerHTML=cards.map(x=>`<div class="sgc-pro-kpi"><small>${x[0]}</small><strong>${x[1]}</strong></div>`).join('');}
@@ -4029,7 +3988,7 @@ const services={
  function packageBadge(){
   const app=$('businessApp');if(!app)return;
   let b=$('sgcCurrentPackageBadge');
-  if(!b){b=document.createElement('section');b.id='sgcCurrentPackageBadge';b.innerHTML='<div><div class="sgc-package-badge-label"></div><div class="sgc-package-badge-name"></div></div><div class="sgc-package-badge-price"></div>';const h=app.querySelector('.topbar')||app.querySelector('.app-header')||app.querySelector('header')||app.firstElementChild;if(h)h.insertAdjacentElement('afterend',b);else app.insertAdjacentElement('afterbegin',b);}
+  if(!b){b=document.createElement('section');b.id='sgcCurrentPackageBadge';b.innerHTML='<div class="sgc-package-left"><div class="sgc-package-badge-label"></div><div class="sgc-package-badge-name"></div></div><div class="sgc-package-countdown"><small></small><strong>0 ቀን 00:00:00</strong></div><div class="sgc-package-right"><div class="sgc-package-badge-price"></div></div>';const h=app.querySelector('.topbar')||app.querySelector('.app-header')||app.querySelector('header')||app.firstElementChild;if(h)h.insertAdjacentElement('afterend',b);else app.insertAdjacentElement('afterbegin',b);}
   const p=plan(),d=info[p];
   const sub=window.appState?.subscription||{};
   if(!d||!sub.isActive){b.style.display='none';return;}
@@ -4103,7 +4062,7 @@ const services={
     let badge=$('sgcCurrentPackageBadge');
     if(!badge){
       badge=document.createElement('section'); badge.id='sgcCurrentPackageBadge';
-      badge.innerHTML='<div><div class="sgc-package-badge-label"></div><div class="sgc-package-badge-name"></div></div><div class="sgc-package-badge-price"></div>';
+      badge.innerHTML='<div class="sgc-package-left"><div class="sgc-package-badge-label"></div><div class="sgc-package-badge-name"></div></div><div class="sgc-package-countdown"><small></small><strong>0 ቀን 00:00:00</strong></div><div class="sgc-package-right"><div class="sgc-package-badge-price"></div></div>';
       const header=app.querySelector('.topbar')||app.querySelector('.app-header')||app.querySelector('header')||app.firstElementChild;
       if(header)header.insertAdjacentElement('afterend',badge);else app.insertAdjacentElement('afterbegin',badge);
     }
@@ -4263,7 +4222,7 @@ const services={
  function addSettingsActions(){
    const page=document.getElementById('page-settings');if(!page)return;
    const clearPanel=document.getElementById('deleteAllBusinessDataPanel');
-   if(clearPanel){const h=clearPanel.querySelector('h3');if(h)h.textContent='🧹 '+am('Clear Data — የንግድ መረጃ አጽዳ','Clear Data — Clear business records');const p=clearPanel.querySelector('p');if(p)p.textContent=am('ይህ የንግድ መዝገቦችን ብቻ ያጸዳል። ከመቀጠልዎ በፊት የExcel ባካፕ ያድርጉ። ሲጫኑ የማረጋገጫ ጥያቄ ይመጣል።','This clears business records only. Download an Excel backup first. A confirmation will appear before clearing.');const b=clearPanel.querySelector('button');if(b)b.textContent='🧹 '+am('Clear Data','Clear Data');}
+   if(clearPanel){const h=clearPanel.querySelector('h3');if(h)h.textContent='🧹 '+am('Clear Data — የንግድ መረጃ አጽዳ','Clear Data — Clear business records');const p=clearPanel.querySelector('p');if(p)p.textContent=am('ይህ የንግድ መዝገቦችን ብቻ በቅፅበት ያጸዳል።','This clears business records instantly.');const b=clearPanel.querySelector('button');if(b)b.textContent='🧹 '+am('Clear Data','Clear Data');}
    if(!document.getElementById('sgcLogoutPanel')){
     const panel=document.createElement('div');panel.id='sgcLogoutPanel';panel.className='panel sgc-logout-panel';
     panel.innerHTML=`<h3>🚪 ${am('Log Out — ከሲስተሙ ውጣ','Log Out')}</h3><p>${am('ሎግ አውት ሲያደርጉ ወደ መግቢያ ገጽ ይመለሳሉ። የንግድ መረጃዎ አይጠፋም።','Logging out returns you to the access screen. Your business data will not be deleted.')}</p><div class="sgc-settings-actions"><button type="button" class="btn sgc-logout-btn" id="sgcLogoutBtn">🚪 ${am('Log Out','Log Out')}</button></div>`;
@@ -4284,16 +4243,12 @@ const services={
  function hideRedundantReregister(){const b=document.getElementById('cpPortalReregisterBtn');if(b)b.remove();document.querySelectorAll('#accessPortal button').forEach(btn=>{const t=(btn.textContent||'').toLowerCase();if(t.includes('እንደ አዲስ መዝግበኝ')||t.includes('start new registration'))btn.remove();});}
  // Clear Data clears business records only; it does not log out or reset registration.
  window.confirmDeleteAllBusinessData=function(){
-   const yes=confirm(am('የስቶክ፣ ምርት፣ ሽያጭ፣ ወጪ፣ ትዕዛዝ፣ ደንበኛ፣ አቅራቢ፣ ሰራተኛ እና ሌሎች የንግድ መረጃዎችን ማጽዳት ይፈልጋሉ? ይህ እርምጃ አይመለስም። ምዝገባዎና አክቲቬሽንዎ አይነኩም።','Clear stock, production, sales, expenses, orders, customers, suppliers, employees and other business records? This cannot be undone. Registration and activation will remain unchanged.'));
-   if(!yes)return;
-   const phrase=prompt(am('ለማረጋገጥ CLEAR ብለው ይጻፉ።','Type CLEAR to confirm.'));
-   if(phrase!=='CLEAR'){if(typeof showToast==='function')showToast(am('ማጽዳቱ ተሰርዟል።','Clear data cancelled.'));return;}
    const keys=['stock','production','stockLogs','sales','expenses','products','orders','customers','suppliers','employees','walletLogs','accountantTasks','cutting','sewing','lineProduction','finishedGoods','stockMovements','income','transactions'];
    keys.forEach(k=>{if(appState&&Array.isArray(appState[k]))appState[k]=[];});
    try{if(typeof saveSystemState==='function')saveSystemState();}catch(e){}
    try{if(typeof renderAllComponents==='function')renderAllComponents();}catch(e){}
    try{if(typeof renderDashboard==='function')renderDashboard();}catch(e){}
-   if(typeof showToast==='function')showToast(am('የንግድ መረጃዎች ተጽድተዋል። ምዝገባዎ እና አክቲቬሽንዎ ተጠብቀዋል።','Business records cleared. Registration and activation remain intact.'));
+   if(typeof showToast==='function')showToast(am('የንግድ መረጃዎች በቅፅበት ተጠርገዋል። ምዝገባዎ እና አክቲቬሽንዎ ተጠብቀዋል።','Business records cleared instantly. Registration and activation remain intact.'));
  };
  function init(){addSettingsActions();hideRedundantReregister();}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
@@ -4378,7 +4333,7 @@ body:not(.dark-theme) .sgc-dash-kpi small,body:not(.dark-theme) .sgc-dash-kpi em
   const plan=currentPlan(),info=planInfo[plan];
   if(!info||!window.appState?.subscription?.isActive){const old=$('sgcCurrentPackageBadge');if(old)old.style.display='none';return;}
   let badge=$('sgcCurrentPackageBadge');
-  if(!badge){badge=document.createElement('section');badge.id='sgcCurrentPackageBadge';badge.innerHTML='<div><div class="sgc-package-badge-label"></div><div class="sgc-package-badge-name"></div></div><div class="sgc-package-badge-price"></div>';const header=app.querySelector('.topbar')||app.querySelector('.app-header')||app.querySelector('header')||app.firstElementChild;if(header)header.insertAdjacentElement('afterend',badge);else app.insertAdjacentElement('afterbegin',badge);}
+  if(!badge){badge=document.createElement('section');badge.id='sgcCurrentPackageBadge';badge.innerHTML='<div class="sgc-package-left"><div class="sgc-package-badge-label"></div><div class="sgc-package-badge-name"></div></div><div class="sgc-package-countdown"><small></small><strong>0 ቀን 00:00:00</strong></div><div class="sgc-package-right"><div class="sgc-package-badge-price"></div></div>';const header=app.querySelector('.topbar')||app.querySelector('.app-header')||app.querySelector('header')||app.firstElementChild;if(header)header.insertAdjacentElement('afterend',badge);else app.insertAdjacentElement('afterbegin',badge);}
   badge.style.setProperty('--pkg-accent',info.accent);badge.style.setProperty('--pkg-bg',info.bg);
   const label=badge.querySelector('.sgc-package-badge-label'),name=badge.querySelector('.sgc-package-badge-name'),price=badge.querySelector('.sgc-package-badge-price');
   if(label)label.textContent=lang()?'YOUR CURRENT PACKAGE':'የአሁኑ ፓኬጅዎ';
@@ -4413,6 +4368,26 @@ body:not(.dark-theme) .sgc-dash-kpi small,body:not(.dark-theme) .sgc-dash-kpi em
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',render);else render();
  const save=window.saveSystemState;if(typeof save==='function'&&!save.__sgcStablePackage){const wrapped=function(){const r=save.apply(this,arguments);render();return r;};wrapped.__sgcStablePackage=true;window.saveSystemState=wrapped;}
  setInterval(render,5000);
+
+ function updatePackageCountdown(){
+   const b=$('sgcCurrentPackageBadge'),sub=window.appState?.subscription||{};
+   if(!b)return;
+   const box=b.querySelector('.sgc-package-countdown'),strong=box?.querySelector('strong'),small=box?.querySelector('small');
+   if(!strong)return;
+   if(!sub.isActive||!sub.endTime){b.classList.remove('sgc-expiring');strong.textContent='0 ቀን 00:00:00';if(small)small.textContent=lang()?'TIME REMAINING':'ቀሪ ጊዜ';return;}
+   const diff=Math.max(0,new Date(sub.endTime).getTime()-Date.now());
+   const totalSec=Math.floor(diff/1000),days=Math.floor(totalSec/86400),hours=Math.floor((totalSec%86400)/3600),mins=Math.floor((totalSec%3600)/60),secs=totalSec%60;
+   const pad=n=>String(n).padStart(2,'0');
+   strong.textContent=`${days} ቀን ${pad(hours)}:${pad(mins)}:${pad(secs)}`;
+   const expiring=diff<=86400000;
+   if(small)small.textContent=expiring?(lang()?'⚠️ EXPIRES WITHIN 24 HOURS':'⚠️ በ24 ሰአት ውስጥ ይዘጋል'):(lang()?'TIME REMAINING':'ቀሪ ጊዜ');
+   b.classList.toggle('sgc-expiring',expiring);
+   if(diff<=0){
+     b.classList.add('sgc-expiring');
+   }
+ }
+ setInterval(updatePackageCountdown,1000);
+ setTimeout(updatePackageCountdown,0);
 })();
 </script>
 
@@ -4847,6 +4822,191 @@ setInterval(()=>{try{
   guardExit();packageAwareSwitchGuard();
   if(nonWeekly())refreshNonWeeklyUI();
 }catch(e){console.warn('Final non-weekly workflow:',e)}},1800);
+})();
+</script>
+
+
+<!-- FINAL MOBILE + DASHBOARD PRESENTATION FIXES (layout-only; data/business logic preserved) -->
+<style id="sgc-final-presentation-fixes">
+/* Mobile: keep Finished/Packed pages inside the phone viewport. Tables scroll INSIDE their own box. */
+#page-packing,#page-finished{width:100%;max-width:100%;min-width:0;overflow:hidden}
+#page-packing .section-head,#page-finished .section-head{min-width:0;max-width:100%}
+#page-packing .sgc-flow-card,#page-finished .sgc-flow-card{width:100%;max-width:100%;min-width:0;overflow:hidden}
+#page-packing .sgc-flow-table,#page-finished .sgc-flow-table{display:block;width:100%;max-width:100%;min-width:0;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+#page-packing .sgc-flow-table table,#page-finished .sgc-flow-table table{min-width:650px;width:650px;max-width:none}
+#page-packing .sgc-flow-grid,#page-finished .sgc-flow-grid{width:100%;max-width:100%;min-width:0}
+
+/* Remove the large rotating package/subscription boards requested by the owner. */
+#launchBoard,#sgcAdBoard,#sgcServicesAdBoard,.sgc-adboard,.sgc-package-ad-board,.sgc-services-ad-board,.sgc-service-ad-board{display:none!important}
+
+/* Smart Garment Control Center: bright, strong, readable typography. */
+#page-dashboard .hero .eyebrow,
+#page-dashboard .hero h1,
+#page-dashboard .hero p{color:#fff!important;font-weight:900!important;text-shadow:0 2px 8px rgba(0,0,0,.35)}
+#page-dashboard #heroBusiness{display:none!important}
+
+/* New organized dashboard insight area. */
+#sgcDashboardInsights{margin-top:16px}
+#sgcDashboardInsights .sgc-insight-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+#sgcDashboardInsights .sgc-insight-card{min-width:0;border:1px solid #e0e2e6;border-radius:15px;background:linear-gradient(145deg,#fff,#fafafa);padding:15px;box-shadow:0 7px 22px rgba(27,32,42,.05)}
+#sgcDashboardInsights .sgc-insight-card small{display:block;color:#6f7683;font-size:10px;font-weight:900;letter-spacing:.3px}
+#sgcDashboardInsights .sgc-insight-card strong{display:block;margin-top:5px;font-size:21px;font-weight:1000;color:#20242d}
+#sgcDashboardInsights .sgc-insight-card em{display:block;margin-top:4px;color:#7b8290;font-size:10px;font-style:normal;line-height:1.55}
+#sgcDashboardInsights .sgc-insight-card.green strong{color:#168653}
+#sgcDashboardInsights .sgc-insight-card.red strong{color:#c73745}
+#sgcDashboardInsights .sgc-insight-card.gold strong{color:#9a7635}
+#sgcDashboardInsights .sgc-insight-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+#sgcDashboardInsights .sgc-insight-head h3{margin:0;font-size:15px;color:var(--text);font-weight:1000}
+#sgcDashboardInsights .sgc-insight-head p{margin:4px 0 0;color:var(--muted);font-size:10px;line-height:1.55}
+#sgcDashboardInsights .sgc-line-wrap{height:220px;width:100%;overflow:hidden;border:1px solid var(--line);border-radius:13px;background:linear-gradient(180deg,#fbfcfd,#fff);padding:7px}
+#sgcDashboardInsights .sgc-line-wrap svg{display:block;width:100%;height:100%}
+#sgcDashboardInsights .sgc-explain{margin-top:10px;padding:10px 12px;border-radius:11px;background:#f6f2e8;border:1px solid #e5d7b8;color:#655638;font-size:10px;line-height:1.75;font-weight:700}
+body.dark-theme #sgcDashboardInsights .sgc-insight-card{background:linear-gradient(145deg,#171b26,#131620);border-color:#262c3a}
+body.dark-theme #sgcDashboardInsights .sgc-insight-card strong{color:#f0f2f7}
+body.dark-theme #sgcDashboardInsights .sgc-line-wrap{background:#11141d;border-color:#2b3244}
+body.dark-theme #sgcDashboardInsights .sgc-explain{background:#23201a;border-color:#51452f;color:#eadbb8}
+
+@media(max-width:760px){
+  #page-packing .section-head,#page-finished .section-head{flex-direction:column;align-items:stretch}
+  #page-packing .section-head .btn-row,#page-finished .section-head .btn-row{width:100%}
+  #page-packing .section-head .btn,#page-finished .section-head .btn{flex:1}
+  #sgcDashboardInsights .sgc-insight-grid{grid-template-columns:1fr 1fr;gap:9px}
+  #sgcDashboardInsights .sgc-insight-card{padding:12px}
+  #sgcDashboardInsights .sgc-insight-card strong{font-size:18px}
+  #sgcDashboardInsights .sgc-line-wrap{height:190px}
+}
+@media(max-width:430px){
+  #sgcDashboardInsights .sgc-insight-grid{grid-template-columns:1fr 1fr}
+  #sgcDashboardInsights .sgc-insight-card em{font-size:9px}
+  #page-packing .sgc-flow-table,#page-finished .sgc-flow-table{border-radius:10px}
+}
+</style>
+<style id="sgc-package-countdown-and-expiry-fix">
+#sgcCurrentPackageBadge{display:grid!important;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:10px}
+#sgcCurrentPackageBadge .sgc-package-left{min-width:0}
+#sgcCurrentPackageBadge .sgc-package-right{min-width:0;text-align:right}
+#sgcCurrentPackageBadge .sgc-package-countdown{text-align:center;min-width:155px;padding:7px 12px;border-radius:12px;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 8px rgba(0,0,0,.12)}
+#sgcCurrentPackageBadge .sgc-package-countdown small{display:block;color:#dce8ee;font-size:9px;font-weight:900;letter-spacing:.08em;margin-bottom:3px}
+#sgcCurrentPackageBadge .sgc-package-countdown strong{display:block;color:#72e6d6;font-family:monospace;font-size:clamp(14px,3.5vw,18px);font-weight:1000;white-space:nowrap}
+#sgcCurrentPackageBadge.sgc-expiring .sgc-package-countdown{border-color:#e45b64;background:rgba(190,45,58,.16)}
+#sgcCurrentPackageBadge.sgc-expiring .sgc-package-countdown strong{color:#ff7b84}
+#sgcCurrentPackageBadge.sgc-expiring .sgc-package-countdown small{color:#ffb8bd}
+@media(max-width:560px){#sgcCurrentPackageBadge{grid-template-columns:1fr 1fr;gap:8px}#sgcCurrentPackageBadge .sgc-package-countdown{grid-column:1/-1;grid-row:2;min-width:0;order:3;padding:6px 8px}#sgcCurrentPackageBadge .sgc-package-left{grid-column:1;grid-row:1}#sgcCurrentPackageBadge .sgc-package-right{grid-column:2;grid-row:1}}
+</style>
+<script id="sgc-final-presentation-script">
+(function(){
+  'use strict';
+  const $=id=>document.getElementById(id);
+  const N=v=>Math.max(0,Number(v)||0);
+  const moneySafe=v=>N(v).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})+' ETB';
+  const escSafe=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  const label=(am,en)=>{try{return typeof currentLang!=='undefined'&&currentLang==='en'?en:am}catch(e){return am}};
+
+  function removeRequestedDashboardBoards(){
+    /* Owner/workflow board: remove the whole panel, not its business logic. */
+    const owner=$('dashboardOwnerDisplay');
+    if(owner){
+      const panel=owner.closest('.panel');
+      if(panel)panel.remove();
+    }
+    /* Large subscription/package information board. */
+    ['launchBoard','sgcAdBoard','sgcServicesAdBoard'].forEach(id=>$(id)?.remove());
+    document.querySelectorAll('.sgc-adboard,.sgc-package-ad-board,.sgc-services-ad-board,.sgc-service-ad-board').forEach(el=>el.remove());
+  }
+
+  function dateKey(v){return String(v||'').slice(0,10)}
+  function lastDays(count){
+    const a=[];const now=new Date();
+    for(let i=count-1;i>=0;i--){const d=new Date(now);d.setHours(0,0,0,0);d.setDate(d.getDate()-i);a.push(d.toISOString().slice(0,10));}
+    return a;
+  }
+  function dailyData(){
+    const s=window.appState||{};const days=lastDays(7);
+    return days.map(date=>({
+      date,
+      income:(s.sales||[]).filter(x=>dateKey(x.date)===date).reduce((a,x)=>a+N(x.totalPrice??x.total??x.amount),0),
+      expense:(s.expenses||[]).filter(x=>dateKey(x.date)===date).reduce((a,x)=>a+N(x.amount),0),
+      produced:(s.production||[]).filter(x=>dateKey(x.date)===date).reduce((a,x)=>a+N(x.quantity??x.produced??x.qty),0),
+      sold:(s.sales||[]).filter(x=>dateKey(x.date)===date).reduce((a,x)=>a+N(x.quantity??x.qty??x.pieces),0)
+    }));
+  }
+  function points(values,w,h,pad,max){
+    const step=values.length>1?(w-pad*2)/(values.length-1):0;
+    return values.map((v,i)=>{
+      const x=pad+i*step;
+      const y=h-pad-(N(v)/Math.max(1,max))*(h-pad*2);
+      return [x,y];
+    });
+  }
+  function lineSvg(data){
+    const w=760,h=215,pad=24;
+    const max=Math.max(1,...data.flatMap(x=>[x.income,x.expense]));
+    const inc=points(data.map(x=>x.income),w,h,pad,max),exp=points(data.map(x=>x.expense),w,h,pad,max);
+    const poly=a=>a.map(p=>p.join(',')).join(' ');
+    const dots=(a,cls)=>a.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="3.5" class="${cls}"><title>${data[i].date}: ${moneySafe(cls==='inc'?data[i].income:data[i].expense)}</title></circle>`).join('');
+    const labels=data.map((x,i)=>`<text x="${inc[i][0]}" y="205" text-anchor="middle" class="axis">${x.date.slice(5)}</text>`).join('');
+    const grid=[0.25,0.5,0.75,1].map(r=>{const y=h-pad-r*(h-pad*2);return `<line x1="${pad}" y1="${y}" x2="${w-pad}" y2="${y}" class="gridline"/>`;}).join('');
+    return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" role="img" aria-label="7 day income and expense line chart"><style>.gridline{stroke:#e7e9ee;stroke-width:1}.axis{fill:#7b8290;font:11px sans-serif}.inc{stroke:#168653;fill:#168653}.exp{stroke:#c73745;fill:#c73745}.line-inc{fill:none;stroke:#168653;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}.line-exp{fill:none;stroke:#c73745;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}@media(prefers-color-scheme:dark){.gridline{stroke:#303746}.axis{fill:#aeb6c4}}</style>${grid}<polyline points="${poly(inc)}" class="line-inc"/><polyline points="${poly(exp)}" class="line-exp"/>${dots(inc,'inc')}${dots(exp,'exp')}${labels}</svg>`;
+  }
+
+  function ensureDashboardInsights(){
+    const dash=$('page-dashboard');if(!dash)return;
+    let box=$('sgcDashboardInsights');
+    if(!box){
+      box=document.createElement('section');box.id='sgcDashboardInsights';
+      const anchor=$('dashboardExtraStats')||dash.querySelector('.hero');
+      if(anchor)anchor.insertAdjacentElement('afterend',box);else dash.appendChild(box);
+    }
+    const s=window.appState||{};
+    const sales=(s.sales||[]).reduce((a,x)=>a+N(x.totalPrice??x.total??x.amount),0);
+    const expenses=(s.expenses||[]).reduce((a,x)=>a+N(x.amount),0);
+    const profit=sales-expenses;
+    const produced=(s.production||[]).reduce((a,x)=>a+N(x.quantity??x.produced??x.qty),0);
+    const sold=(s.sales||[]).reduce((a,x)=>a+N(x.quantity??x.qty??x.pieces),0);
+    const packed=(s.packingRecords||[]).reduce((a,x)=>a+N(x.qty),0);
+    const finished=(s.products||[]).reduce((a,x)=>a+N(x.finishedStockQty),0);
+    const stockKg=(s.stock||[]).reduce((a,x)=>a+N(x.qtyKg??x.qty??x.kg),0);
+    const low=(s.stock||[]).filter(x=>N(x.qtyKg??x.qty??x.kg)<=N(x.minAlertKg??x.minAlert??x.minQty??5)).length;
+    const d=dailyData();
+    const periodProfit=profit;
+    box.innerHTML=`
+      <div class="panel">
+        <div class="sgc-insight-head"><div><h3>📊 ${label('የንግድ መረጃ ማዕከል','Business information center')}</h3><p>${label('በካታጎሪ የተደራጀ አጠቃላይ መረጃ፣ ራስ-ሰር ስሌት እና የ7 ቀን እንቅስቃሴ።','Organized category summaries, automatic calculations and a 7-day movement view.')}</p></div></div>
+        <div class="sgc-insight-grid">
+          <div class="sgc-insight-card green"><small>🟢 ${label('ገቢ / ሽያጭ','Income / Sales')}</small><strong>${moneySafe(sales)}</strong><em>${label('የተመዘገበ የሽያጭ ገቢ','Recorded sales revenue')}</em></div>
+          <div class="sgc-insight-card red"><small>🔴 ${label('ወጪ','Expenses')}</small><strong>${moneySafe(expenses)}</strong><em>${label('ሁሉም የተመዘገቡ ወጪዎች','All recorded expenses')}</em></div>
+          <div class="sgc-insight-card ${periodProfit>=0?'green':'red'}"><small>📈 ${label('ትርፍ / ኪሳራ','Profit / Loss')}</small><strong>${moneySafe(periodProfit)}</strong><em>${sales?((periodProfit/sales)*100).toFixed(1)+'% '+label('የትርፍ መጠን','profit margin'):label('ገቢ ሲመዘገብ ይሰላል','Calculated after income is recorded')}</em></div>
+          <div class="sgc-insight-card gold"><small>👕 ${label('ምርት','Production')}</small><strong>${produced.toLocaleString()} pcs</strong><em>${label('አጠቃላይ የተመዘገበ ምርት','Total recorded production')}</em></div>
+          <div class="sgc-insight-card gold"><small>🪡 ${label('ስፌት / ማሸጊያ','Sewing / Packing')}</small><strong>${packed.toLocaleString()} pcs</strong><em>${label('የታሸገ ምርት · ቀሪ ስራ በስፌት ገጽ ላይ','Packed goods · remaining work is tracked in Sewing')}</em></div>
+          <div class="sgc-insight-card gold"><small>📦 ${label('ያለቀ ምርት ስቶክ','Finished Stock')}</small><strong>${finished.toLocaleString()} pcs</strong><em>${label('ለሽያጭ የሚገኝ ያለቀ ምርት','Finished goods available for sale')}</em></div>
+          <div class="sgc-insight-card"><small>🛒 ${label('ሽያጭ ብዛት','Sold Quantity')}</small><strong>${sold.toLocaleString()} pcs</strong><em>${label('በሽያጭ መዝገብ የተሸጠ','Pieces recorded as sold')}</em></div>
+          <div class="sgc-insight-card"><small>🧵 ${label('ጨርቅ ስቶክ','Fabric Stock')}</small><strong>${stockKg.toLocaleString(undefined,{maximumFractionDigits:2})} kg</strong><em>${label('የተመዘገበ የጨርቅ መጠን','Recorded fabric quantity')}</em></div>
+          <div class="sgc-insight-card ${low?'red':'green'}"><small>⚠️ ${label('ዝቅተኛ ስቶክ','Low Stock')}</small><strong>${low}</strong><em>${label('ከተወሰነው የአላርም መጠን በታች የሆኑ ዕቃዎች','Items at or below their alert threshold')}</em></div>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:14px">
+        <div class="sgc-insight-head"><div><h3>📈 ${label('የ7 ቀን ገቢ እና ወጪ መስመር ግራፍ','7-day income and expense line chart')}</h3><p>${label('አረንጓዴ = ገቢ · ቀይ = ወጪ። በነጥቡ ላይ ሲነኩ የቀኑን መጠን ያያሉ።','Green = income · red = expense. Tap a point to see the day and amount.')}</p></div></div>
+        <div class="sgc-line-wrap">${lineSvg(d)}</div>
+        <div class="sgc-explain">${label('ማብራሪያ፦ ይህ ግራፍ ከተመዘገበው የሽያጭ ገቢ እና ወጪ ብቻ ይሰራል። ትርፍ = ገቢ − ወጪ። የያለቀ ምርት ስቶክ እና የማሸጊያ ብዛት ከስፌት/ማሸጊያ መዝገብ ጋር ይጣጣማሉ።','Explanation: this chart uses recorded sales income and expenses. Profit = income − expenses. Finished stock and packed quantities stay synchronized with the sewing/packing records.')}</div>
+      </div>`;
+  }
+
+  function run(){
+    try{
+      removeRequestedDashboardBoards();
+      ensureDashboardInsights();
+      /* Re-apply mobile constraints after dynamic page creation. */
+      ['page-packing','page-finished'].forEach(id=>{const p=$(id);if(p){p.style.width='100%';p.style.maxWidth='100%';p.style.minWidth='0';p.style.overflow='hidden';}});
+    }catch(e){console.warn('SGC final presentation fixes',e)}
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
+  document.addEventListener('click',e=>{if(e.target.closest('.nav-btn,#hamb'))setTimeout(run,80)});
+  document.addEventListener('change',e=>{if(e.target.closest('#appLangSelect'))setTimeout(run,80)});
+  const oldSave=window.saveSystemState;
+  if(typeof oldSave==='function'&&!oldSave.__sgcPresentationWrapped){
+    const wrapped=function(){const r=oldSave.apply(this,arguments);setTimeout(run,0);return r};wrapped.__sgcPresentationWrapped=true;window.saveSystemState=wrapped;
+  }
+  setInterval(run,2500);
 })();
 </script>
 
