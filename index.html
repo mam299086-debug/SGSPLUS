@@ -268,10 +268,6 @@ body.dark-theme .quick-card{background:#11141d;border-color:#2b3244}.quick-card 
             <input id="subscriberEmail" type="email" placeholder="example@gmail.com">
             <label for="companyRegion">📍 ክልል / ከተማ ይምረጡ</label>
             <select id="companyRegion"><option value="">ክልል / ከተማ ይምረጡ</option><option>አዲስ አበባ</option><option>ኦሮሚያ</option><option>አማራ</option><option>ደቡብ ኢትዮጵያ</option><option>ሲዳማ</option><option>ሶማሌ</option><option>ትግራይ</option><option>አፋር</option><option>ቤኒሻንጉል-ጉሙዝ</option><option>ጋምቤላ</option><option>ሐረሪ</option><option>ድሬዳዋ</option><option>ሌላ</option></select>
-            <label for="companySubcity">🏙️ ክፍለ ከተማ / ዞን</label>
-            <select id="companySubcity"><option value="">ክፍለ ከተማ / ዞን ይምረጡ</option></select>
-            <label for="companyAddress">🏠 ዝርዝር አድራሻ (በእጅ ማስገባት ይችላሉ)</label>
-            <input id="companyAddress" placeholder="ወረዳ፣ ቀበሌ፣ ህንፃ ወይም ዝርዝር አድራሻ">
             <label for="selectedPlan" data-i18n="lbl_plan">የመረጡት ፓኬጅ / የቀን ብዛት</label>
             <select id="selectedPlan" onchange="updateSelectedPlanDetails()">
               <option value="" data-i18n="opt_plan">ፓኬጅ ይምረጡ</option>
@@ -304,7 +300,7 @@ body.dark-theme .quick-card{background:#11141d;border-color:#2b3244}.quick-card 
           <!-- STEP 5 -->
           <div class="registration-step" data-step="5" style="display:none;">
             <label for="activationCode" data-i18n="lbl_actcode">የመግቢያ ኮድ ያስገቡ</label>
-            <input id="activationCode" autocomplete="off" placeholder="የተላከልዎትን የመግቢያ ኮድ እዚህ ያስገቡ" oninput="checkActivationCodeInput(this.value)">
+            <input id="activationCode" type="password" autocomplete="off" inputmode="text" placeholder="የተላከልዎትን የመግቢያ ኮድ እዚህ ያስገቡ" oninput="checkActivationCodeInput(this.value)">
             <p class="form-note" data-i18n="note_act">የምዝገባ መረጃዎ እና ደረሰኙ ሙሉ በሙሉ ወደ ቦቱ ከተላከ በኋላ የተላከልዎትን የመግቢያ ኮድ ሲያስገቡ ሲስተሙ አውቶማቲካሊ ይከፈታል።</p>
           </div>
 
@@ -1298,7 +1294,7 @@ function generateReceiptPreview() {
   const cPhone = document.getElementById("companyPhone").value;
   const tgUser = document.getElementById("telegramUser").value;
   const email = document.getElementById("subscriberEmail").value;
-  const addr = document.getElementById("companyAddress").value;
+  const addr = document.getElementById("companyAddress")?.value || "";
   const plan = document.getElementById("selectedPlan").value;
   const pMethod = document.getElementById("paymentMethodSelect").value;
   const pRef = document.getElementById("paymentReference").value;
@@ -1333,7 +1329,7 @@ function sgcRegistrationPayload() {
   const current = {
     name: val('subscriberName'), company: val('companyName'), companyType: val('companyType'),
     personalPhone: val('personalPhone'), companyPhone: val('companyPhone'),
-    telegramUser: val('telegramUser'), email: val('subscriberEmail'), address: [val('companyRegion'), val('companySubcity'), val('companyAddress')].filter(Boolean).join(' · '),
+    telegramUser: val('telegramUser'), email: val('subscriberEmail'), address: val('companyRegion'),
     plan, days, planFee, paymentMethod: val('paymentMethodSelect'), paymentReference: val('paymentReference'),
     startTime: appState?.subscription?.startTime || cached.startTime || '',
     endTime: appState?.subscription?.endTime || cached.endTime || ''
@@ -3441,7 +3437,7 @@ function professionalReceipt(){
  <div class="sgc-receipt-item"><small>${tx('የግል ስልክ','Personal phone')}</small><strong>${esc(v('personalPhone'))}</strong></div>
  <div class="sgc-receipt-item"><small>${tx('የድርጅት ስልክ','Business phone')}</small><strong>${esc(v('companyPhone'))}</strong></div>
  <div class="sgc-receipt-item"><small>Telegram / Email</small><strong>${esc(v('telegramUser'))} / ${esc(v('subscriberEmail'))}</strong></div>
- <div class="sgc-receipt-item"><small>${tx('የድርጅት አድራሻ','Business address')}</small><strong>${esc([v('companyRegion'),v('companySubcity'),v('companyAddress')].filter(x=>x&&x!=='—').join(' · ')||'—')}</strong></div>
+ <div class="sgc-receipt-item"><small>${tx('የድርጅት አድራሻ','Business address')}</small><strong>${esc(v('companyRegion')||'—')}</strong></div>
  <div class="sgc-receipt-item"><small>${tx('የክፍያ ዘዴ','Payment method')}</small><strong>${esc(v('paymentMethodSelect'))}</strong></div>
  <div class="sgc-receipt-item"><small>${tx('የተመረጠ ፓኬጅ','Selected package')}</small><strong>${esc(planName)} · ${days} ${tx('ቀን','days')}</strong></div>
  <div class="sgc-receipt-item"><small>${tx('የግብይት / ትራንዛክሽን አይዲ','Transaction reference / TxID')}</small><strong>${esc(v('paymentReference'))}</strong></div>
@@ -3941,51 +3937,6 @@ const services={
 </script>
 
 <!-- SGC permanent dark mode + distinct package dashboard colors -->
-<style id="sgc-permanent-dark-package-colors">
-html,body{background:#0a0e16!important;color:#eef2f8!important;color-scheme:dark!important}
-#themeBtn,[onclick*="toggleDashboardTheme"],.theme-toggle,.theme-switch,.portal-theme{display:none!important;visibility:hidden!important;pointer-events:none!important}
-body,body *{scrollbar-color:#3b4658 #101722}
-body .topbar,body .sidebar,body .panel,body .stat,body .modal,body .app-modal,body .app-modal-content,body .modal-content,body .table-wrap,body .quick-card{background-color:#151c28;color:#eef2f8;border-color:#2b3647}
-body input,body select,body textarea,body option{background:#101722!important;color:#f3f6fb!important;border-color:#344154!important;-webkit-text-fill-color:#f3f6fb!important}
-body .page-title,body .page h1,body .page h2,body .page h3,body .page h4,body .page p,body .page label,body .page span,body .page small,body .page td,body .page th{color:#eef2f8}
-body .sgc-vip-card{background:linear-gradient(145deg,#241f2e,#35283c)!important;border-color:#b9a0e5!important;box-shadow:0 12px 30px #9d7cce20!important}
-body .sgc-vip-card h3,body .sgc-vip-card p,body .sgc-vip-card li{color:#f1e8ff!important}
-body .pricing-grid .price-card{border-width:1px!important;box-shadow:0 8px 22px #0003!important}
-body .pricing-grid .price-card.sgc-plan-weekly{background:linear-gradient(145deg,#142b35,#1b3540)!important;border-color:#398da0!important}
-body .pricing-grid .price-card.sgc-plan-monthly{background:linear-gradient(145deg,#182b23,#203a2d)!important;border-color:#4c9b72!important}
-body .pricing-grid .price-card.sgc-plan-30day{background:linear-gradient(145deg,#302719,#41331f)!important;border-color:#bd9652!important}
-body .pricing-grid .price-card.sgc-plan-quarterly{background:linear-gradient(145deg,#1d2539,#28344d)!important;border-color:#6e91d0!important}
-body .pricing-grid .price-card.sgc-plan-annual{background:linear-gradient(145deg,#2d2028,#3b2934)!important;border-color:#b97896!important}
-body .pricing-grid .price-card.sgc-plan-vip{background:linear-gradient(145deg,#282137,#382d4a)!important;border-color:#b9a0e5!important}
-body .pricing-grid .price-card h3,body .pricing-grid .price-card p,body .pricing-grid .price-card li,body .pricing-grid .price-card .price{color:#f1f5fb!important}
-body .pricing-grid .price-card .price-select{background:#111827!important;color:#fff!important;border:1px solid #536174!important}
-#sgcAdBoard .sgc-package-ad-pricebox{background:#192334!important;color:#f7f2e7!important;border-color:#b8a06b!important}
-#sgcAdBoard .sgc-package-ad-pricebox strong,#sgcAdBoard .sgc-package-ad-pricebox small{color:#f4e9cf!important}
-#sgcAdBoard .sgc-package-ad-pricebox b{color:#ffd77d!important}
-</style>
-<script id="sgc-permanent-dark-package-colors-script">
-(function(){
- function forceDark(){document.documentElement.classList.add('dark-theme');document.body.classList.add('dark-theme');document.documentElement.style.colorScheme='dark';const b=document.getElementById('themeBtn');if(b)b.remove();document.querySelectorAll('[onclick*="toggleDashboardTheme"],.theme-toggle,.theme-switch,.portal-theme').forEach(x=>{if(x.id!=='themeBtn')x.remove()});}
- function colorPackages(){
-   const cards=document.querySelectorAll('.pricing-grid .price-card');
-   cards.forEach(card=>{
-     card.classList.remove('sgc-plan-weekly','sgc-plan-monthly','sgc-plan-30day','sgc-plan-quarterly','sgc-plan-annual','sgc-plan-vip');
-     const t=((card.innerText||'')+' '+(card.querySelector('[data-plan]')?.getAttribute('data-plan')||'')).toLowerCase();
-     if(t.includes('vip')||t.includes('ቪአይፒ'))card.classList.add('sgc-plan-vip');
-     else if(t.includes('annual')||t.includes('year')||t.includes('ዓመት')||t.includes('አመት'))card.classList.add('sgc-plan-annual');
-     else if(t.includes('quarter')||t.includes('3 month')||t.includes('three month')||t.includes('ሶስት ወር')||t.includes('ሶስት ወር'))card.classList.add('sgc-plan-quarterly');
-     else if(t.includes('30 day')||t.includes('30-day')||t.includes('30 ቀን'))card.classList.add('sgc-plan-30day');
-     else if(t.includes('monthly')||t.includes('month')||t.includes('ወር'))card.classList.add('sgc-plan-monthly');
-     else card.classList.add('sgc-plan-weekly');
-   });
- }
- const oldToggle=window.toggleDashboardTheme;
- window.toggleDashboardTheme=function(){forceDark();return false};
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{forceDark();colorPackages()});else{forceDark();colorPackages()}
- setInterval(()=>{forceDark();colorPackages()},1000);
-})();
-</script>
-
 
 <!-- SGC silent delete actions + package-gated sewing KPI cards -->
 <style id="sgc-sewing-kpi-cards-style">
@@ -4247,12 +4198,12 @@ body .pricing-grid .price-card .price-select{background:#111827!important;color:
   const step=typeof currentRegistrationStep==='number'?currentRegistrationStep:1;
   const required=(id,label)=>{const e=$(id);if(!e||!String(e.value||'').trim()){showValidation(msg('እባክዎ '+label+' ያስገቡ።','Please enter '+label+'.'),e);return false;}return true;};
   if(step===1){if(!required('subscriberName','ሙሉ ስም / full name'))return;if(!required('companyName','የድርጅት ስም / business name'))return;if(!required('companyType','የድርጅት አይነት / business type'))return;}
-  if(step===2){if(!required('personalPhone','የግል ስልክ ቁጥር / personal phone'))return;if(!validPhone($('personalPhone').value)){showValidation(msg('ትክክለኛ የኢትዮጵያ ስልክ ቁጥር ያስገቡ።','Enter a valid Ethiopian phone number.'),$('personalPhone'));return;}if(!required('companyPhone','የድርጅት ስልክ / business phone'))return;if(!validPhone($('companyPhone').value)){showValidation(msg('የድርጅት ስልክ ቁጥሩ ትክክል አይደለም።','Enter a valid business phone number.'),$('companyPhone'));return;}if(!required('subscriberEmail','ኢሜል / email'))return;const em=$('subscriberEmail');if(!em.checkValidity()||! /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em.value.trim())){showValidation(msg('ትክክለኛ ኢሜል ያስገቡ።','Enter a valid email address.'),em);return;}if(!required('companyRegion','ክልል / ከተማ'))return;if($('companyRegion').value==='አዲስ አበባ'&&!required('companySubcity','የአዲስ አበባ ክፍለ ከተማ'))return;if(!required('companyAddress','ዝርዝር አድራሻ'))return;if(!required('selectedPlan','ፓኬጅ'))return;}
+  if(step===2){if(!required('personalPhone','የግል ስልክ ቁጥር / personal phone'))return;if(!validPhone($('personalPhone').value)){showValidation(msg('ትክክለኛ የኢትዮጵያ ስልክ ቁጥር ያስገቡ።','Enter a valid Ethiopian phone number.'),$('personalPhone'));return;}if(!required('companyPhone','የድርጅት ስልክ / business phone'))return;if(!validPhone($('companyPhone').value)){showValidation(msg('የድርጅት ስልክ ቁጥሩ ትክክል አይደለም።','Enter a valid business phone number.'),$('companyPhone'));return;}if(!required('subscriberEmail','ኢሜል / email'))return;const em=$('subscriberEmail');if(!em.checkValidity()||! /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em.value.trim())){showValidation(msg('ትክክለኛ ኢሜል ያስገቡ።','Enter a valid email address.'),em);return;}if(!required('companyRegion','ክልል / ከተማ'))return;if(!required('selectedPlan','ፓኬጅ'))return;}
   if(step===3){if(!required('paymentMethodSelect','የክፍያ ዘዴ / payment method'))return;if(!required('paymentReference','Transaction ID'))return;if(!validTx($('paymentReference').value)){showValidation(msg('ትክክለኛ የግብይት አይዲ ያስገቡ፤ ቢያንስ 6 ቁምፊ እና ቁጥር ይኑረው።','Enter a valid transaction ID (6–80 letters/numbers and at least one digit).'),$('paymentReference'));return;}}
   if(typeof originalNext==='function')return originalNext.apply(this,arguments);
  };
  // Validate receipt submission too, so the receipt button cannot bypass form checks.
- document.addEventListener('click',function(e){const b=e.target.closest('#sgcSendSystemBtn');if(!b)return;const ids=['subscriberName','companyName','companyType','personalPhone','companyPhone','subscriberEmail','companyRegion','companyAddress','selectedPlan','paymentMethodSelect','paymentReference'];for(const id of ids){const el=$(id);if(!el||!String(el.value||'').trim()){e.preventDefault();e.stopImmediatePropagation();showValidation(msg('ደረሰኙን ከመላክዎ በፊት ሁሉንም መረጃ ይሙሉ።','Complete all required fields before submitting the receipt.'),el);return;}}if(!validPhone($('personalPhone').value)||!validPhone($('companyPhone').value)||!$('subscriberEmail').checkValidity()||!validTx($('paymentReference').value)){e.preventDefault();e.stopImmediatePropagation();showValidation(msg('ስልክ፣ ኢሜል ወይም Transaction ID ትክክል አይደለም።','Please correct the phone, email, or transaction ID.'),null);return;}},true);
+ document.addEventListener('click',function(e){const b=e.target.closest('#sgcSendSystemBtn');if(!b)return;const ids=['subscriberName','companyName','companyType','personalPhone','companyPhone','subscriberEmail','companyRegion','selectedPlan','paymentMethodSelect','paymentReference'];for(const id of ids){const el=$(id);if(!el||!String(el.value||'').trim()){e.preventDefault();e.stopImmediatePropagation();showValidation(msg('ደረሰኙን ከመላክዎ በፊት ሁሉንም መረጃ ይሙሉ።','Complete all required fields before submitting the receipt.'),el);return;}}if(!validPhone($('personalPhone').value)||!validPhone($('companyPhone').value)||!$('subscriberEmail').checkValidity()||!validTx($('paymentReference').value)){e.preventDefault();e.stopImmediatePropagation();showValidation(msg('ስልክ፣ ኢሜል ወይም Transaction ID ትክክል አይደለም።','Please correct the phone, email, or transaction ID.'),null);return;}},true);
  // Keep VIP free of all ad/package information boards regardless of other refresh scripts.
  function hideVipBoards(){let plan='';try{plan=String((typeof appState!=='undefined'&&appState.subscription&&appState.subscription.plan)||'').toLowerCase();}catch(e){}const vip=plan==='vip_weekly'||plan==='vip';document.querySelectorAll('#sgcAdBoard,#sgcServicesAdBoard,#tickerInfoBox,.sgc-adboard,.sgc-package-ad-board,.sgc-services-ad-board,.sgc-service-ad-board,[id*="AdBoard"],[id*="adBoard"]').forEach(el=>{if(el.id==='sgcCurrentPackageBadge')return;el.style.display=vip?'none':'';});}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',hideVipBoards);else hideVipBoards();
@@ -4464,5 +4415,440 @@ body:not(.dark-theme) .sgc-dash-kpi small,body:not(.dark-theme) .sgc-dash-kpi em
  setInterval(render,5000);
 })();
 </script>
+
+<!-- FINAL NON-WEEKLY WORKFLOW PROTECTION + PACKING/FINISHED GOODS -->
+<style id="final-nonweekly-workflow-style">
+/* Theme toggle must remain available. */
+#themeBtn,[onclick*="toggleDashboardTheme"]{display:inline-flex!important;visibility:visible!important;pointer-events:auto!important}
+/* The requested registration fields are removed, not merely optional. */
+#companySubcity,#companyAddress{display:none!important}
+#companySubcity+label,#companyAddress+label{display:none!important}
+/* Settings must not expose logout / re-registration controls. */
+#sgcLogoutPanel,#cpReregisterPanel,#cpPortalReregisterBtn,
+#page-settings .sgc-logout-panel,#page-settings .cp-danger-panel{display:none!important}
+#sgcPackingPage .sgc-flow-card,#sgcFinishedPage .sgc-flow-card{
+  border:1px solid #8b6d3d;border-radius:16px;padding:16px;
+  background:linear-gradient(145deg,#24170f,#17120e);
+  color:#fff4e7;box-shadow:0 8px 24px #0003
+}
+#sgcPackingPage .sgc-flow-grid,#sgcFinishedPage .sgc-flow-grid{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:16px
+}
+#sgcPackingPage .sgc-flow-kpi,#sgcFinishedPage .sgc-flow-kpi{
+  border:1px solid #735a36;border-radius:13px;padding:14px;background:#1b1510
+}
+#sgcPackingPage .sgc-flow-kpi small,#sgcFinishedPage .sgc-flow-kpi small{display:block;color:#d9c3a1;font-size:10px}
+#sgcPackingPage .sgc-flow-kpi strong,#sgcFinishedPage .sgc-flow-kpi strong{display:block;font-size:22px;margin-top:6px;color:#ffe3a5}
+#sgcPackingPage .sgc-flow-table,#sgcFinishedPage .sgc-flow-table{overflow:auto;border:1px solid #735a36;border-radius:12px}
+#sgcPackingPage table,#sgcFinishedPage table{min-width:700px;background:#18130f}
+#sgcPackingPage th,#sgcFinishedPage th{background:#251b13;color:#e7ca91}
+#sgcPackingPage td,#sgcFinishedPage td{border-bottom-color:#3c3024}
+@media(max-width:760px){
+ #sgcPackingPage .sgc-flow-grid,#sgcFinishedPage .sgc-flow-grid{grid-template-columns:1fr}
+}
+</style>
+<script id="final-nonweekly-workflow-script">
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const num=v=>Number.isFinite(Number(v))?Number(v):0;
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const activePlan=()=>String(window.appState?.subscription?.plan||'weekly').toLowerCase().trim();
+const nonWeekly=()=>activePlan()!=='weekly';
+const money=v=>num(v).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})+' ETB';
+const today=()=>new Date().toISOString().slice(0,10);
+const tr=(am,en)=>typeof T==='function'?T(am,en):(typeof tLabel==='function'?tLabel(am,en):am);
+
+/* ---------- PACKING LEDGER ---------- */
+function ensurePackingLedger(){
+  if(!nonWeekly())return;
+  appState.packingRecords=Array.isArray(appState.packingRecords)?appState.packingRecords:[];
+  if(appState.packingLedgerSeeded)return;
+  // Existing sewing "completed" quantities are treated as already-packed history once.
+  (appState.sewing||[]).forEach(r=>{
+    const q=Math.max(0,num(r.completed));
+    if(q>0 && !(appState.packingRecords||[]).some(x=>x.sewingId===r.id)){
+      appState.packingRecords.push({
+        id:'pack_seed_'+r.id,sewingId:r.id,date:r.date||today(),
+        productId:r.productId,productName:r.productName,qty:q,
+        unitPrice:num(r.unitPrice),value:q*num(r.unitPrice),seed:true
+      });
+    }
+  });
+  appState.packingLedgerSeeded=true;
+  try{localStorage.setItem('clickpaye_garment_platinum_state',JSON.stringify(appState));}catch(e){}
+}
+function sewingRows(productId){
+  return (appState.sewing||[]).filter(r=>r.productId===productId);
+}
+function lineInTotal(productId){
+  return sewingRows(productId).reduce((a,r)=>a+Math.max(0,num(r.lineIn)),0);
+}
+function packedTotal(productId){
+  return (appState.packingRecords||[]).filter(r=>r.productId===productId)
+    .reduce((a,r)=>a+Math.max(0,num(r.qty)),0);
+}
+function sewingRemaining(productId){return Math.max(0,lineInTotal(productId)-packedTotal(productId));}
+function totalPackedQty(){return (appState.packingRecords||[]).reduce((a,r)=>a+Math.max(0,num(r.qty)),0);}
+function totalPackedValue(){return (appState.packingRecords||[]).reduce((a,r)=>a+Math.max(0,num(r.value??(r.qty*r.unitPrice))),0);}
+
+function syncFinishedProductStock(){
+  if(!nonWeekly())return;
+  ensurePackingLedger();
+  appState.products=Array.isArray(appState.products)?appState.products:[];
+  appState.products.forEach(p=>{
+    const packed=packedTotal(p.id);
+    const sold=(appState.sales||[]).filter(s=>(s.productId===p.id)||s.productName===p.name)
+      .reduce((a,s)=>a+Math.max(0,num(s.qty)),0);
+    p.finishedStockQty=Math.max(0,packed-sold);
+  });
+}
+
+function refreshSewingRowsAfterPacking(){
+  (appState.sewing||[]).forEach(r=>{
+    const packed=Math.max(0,num(r.lineIn))>0
+      ? (appState.packingRecords||[]).filter(x=>x.sewingId===r.id).reduce((a,x)=>a+num(x.qty),0)
+      : 0;
+    r.completed=Math.max(0,packed);
+    r.remaining=Math.max(0,num(r.lineIn)-packed);
+    r.completedValue=packed*num(r.unitPrice);
+  });
+}
+
+/* ---------- PACKED PRODUCT PAGE ---------- */
+function ensurePackingPage(){
+  if(!nonWeekly())return;
+  let page=$('page-packing');
+  if(!page){
+    page=document.createElement('section');
+    page.className='page';
+    page.id='page-packing';
+    page.innerHTML=`
+      <div class="section-head">
+        <div><h2>📦 የታሸገ ፕሮዳክት <span class="muted">· Packed Product</span></h2>
+        <p>ወደ ስፌት የገባውን አጠቃላይ ብዛት እና ዋጋ እና የታሸገውን ድምር ይቆጣጠሩ።</p></div>
+        <div class="btn-row no-print"><button class="btn primary" onclick="sgcOpenPackingModal()">＋ ማሸጊያ መዝግብ</button><button class="btn" onclick="printServiceReport('page-packing')">🖨️ Print</button></div>
+      </div>
+      <div class="sgc-flow-grid">
+        <div class="sgc-flow-kpi"><small>አጠቃላይ ወደ ስፌት የገባ ብዛት</small><strong id="sgcLineInTotal">0 pcs</strong></div>
+        <div class="sgc-flow-kpi"><small>አጠቃላይ ወደ ስፌት የገባ ዋጋ</small><strong id="sgcLineInValue">0 ETB</strong></div>
+        <div class="sgc-flow-kpi"><small>አጠቃላይ የታሸገ ፕሮዳክት</small><strong id="sgcPackedTotal">0 pcs</strong></div>
+      </div>
+      <div class="sgc-flow-card">
+        <h3>የማሸጊያ ሂደት</h3>
+        <p class="muted">የምርት ስሙ ከስፌት መስመር ይመጣል። ብዛቱ ሲመዘገብ ከስፌት ቀሪ ስራ ይቀነሳል።</p>
+        <div class="sgc-flow-table"><table><thead><tr><th>የምርት ስም</th><th>ወደ ስፌት የገባ</th><th>የገባ ዋጋ</th><th>የታሸገ</th><th>ቀሪ የስፌት ስራ</th><th>ቀሪ ዋጋ</th></tr></thead><tbody id="sgcPackingSummaryBody"></tbody></table></div>
+      </div>`;
+    $('businessApp')?.querySelector('.content')?.appendChild(page);
+  }
+}
+window.sgcOpenPackingModal=function(){
+  if(!nonWeekly())return;
+  ensurePackingLedger();
+  const products=(appState.products||[]).filter(p=>sewingRemaining(p.id)>0);
+  if(!products.length){showToast(tr('ከስፌት የቀረ የሚታሸግ ፕሮዳክት የለም።','No sewing quantity is remaining to pack.'));return;}
+  const opts=products.map(p=>`<option value="${esc(p.id)}">${esc(p.name)} · ${sewingRemaining(p.id).toLocaleString()} pcs ${tr('ቀሪ','remaining')}</option>`).join('');
+  const first=products[0];
+  const html=`<form class="form-grid" onsubmit="sgcSavePacking(event)">
+    <div class="field full"><label>የልብስ / ፕሮዳክት ስም</label><select id="sgcPackProduct" required onchange="sgcUpdatePackingHint()">${opts}</select></div>
+    <div class="field"><label>የማሸግ ቀን</label><input type="date" id="sgcPackDate" value="${today()}" required></div>
+    <div class="field"><label>የታሸገ ብዛት</label><input type="number" id="sgcPackQty" min="1" step="1" required oninput="sgcUpdatePackingHint()"></div>
+    <div class="field full"><div id="sgcPackHint" class="notice"></div></div>
+    <div class="field full"><button class="btn primary" type="submit">📦 የታሸገ ፕሮዳክት መዝግብ</button></div>
+  </form>`;
+  openAppModal('የታሸገ ፕሮዳክት መዝግብ',html);
+  $('sgcPackProduct').value=first.id;
+  sgcUpdatePackingHint();
+};
+window.sgcUpdatePackingHint=function(){
+  const p=(appState.products||[]).find(x=>x.id===$('sgcPackProduct')?.value);
+  const rem=p?sewingRemaining(p.id):0;
+  const q=Math.max(0,num($('sgcPackQty')?.value));
+  const h=$('sgcPackHint');
+  if(h)h.innerHTML=`የተመረጠው ምርት፦ <strong>${esc(p?.name||'-')}</strong><br>የስፌት ቀሪ፦ <strong>${rem.toLocaleString()} pcs</strong> · የዚህ ማሸጊያ ዋጋ፦ <strong>${money(q*num(p?.unitPrice))}</strong>`;
+};
+window.sgcSavePacking=function(e){
+  e.preventDefault();
+  if(!nonWeekly())return;
+  ensurePackingLedger();
+  const p=(appState.products||[]).find(x=>x.id===$('sgcPackProduct')?.value);
+  const q=Math.floor(num($('sgcPackQty')?.value));
+  const date=$('sgcPackDate')?.value||today();
+  const rem=p?sewingRemaining(p.id):0;
+  if(!p||q<1||q>rem){showToast(tr(`ቀሪው ${rem} ፍሬ ብቻ ነው።`,`Only ${rem} pieces remain in sewing.`));return;}
+  let left=q;
+  const rows=sewingRows(p.id).filter(r=>num(r.lineIn)>num(r.completed));
+  for(const r of rows){
+    if(left<=0)break;
+    const available=Math.max(0,num(r.lineIn)-num(r.completed));
+    const take=Math.min(left,available);
+    if(take>0){
+      appState.packingRecords.push({id:'pack_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),sewingId:r.id,date,productId:p.id,productName:p.name,qty:take,unitPrice:num(p.unitPrice),value:take*num(p.unitPrice)});
+      left-=take;
+    }
+  }
+  if(left>0){showToast(tr('የስፌት ቀሪ ብዛት በትክክል አልተሰላም።','Unable to allocate the packing quantity.'));return;}
+  refreshSewingRowsAfterPacking();
+  syncFinishedProductStock();
+  saveSystemState();
+  closeAppModal();
+  sgcRenderPackingAndFinished();
+  if(typeof sgcRenderSewing==='function')sgcRenderSewing();
+  showToast(tr('የታሸገ ፕሮዳክት ተመዝግቧል፤ የስፌት ቀሪ ቀንሷል።','Packed product saved; sewing remaining quantity was reduced.'));
+};
+
+/* ---------- FINISHED PRODUCT PAGE ---------- */
+function ensureFinishedPage(){
+  if(!nonWeekly())return;
+  let page=$('page-finished');
+  if(!page){
+    page=document.createElement('section');
+    page.className='page';
+    page.id='page-finished';
+    page.innerHTML=`
+      <div class="section-head"><div><h2>🏁 ያለቀለት ፕሮዳክት <span class="muted">· Finished Product</span></h2><p>የታሸገ ብዛት ሲመዘገብ ይህ ስቶክ በራስ-ሰር ይጨምራል፤ ምንም ተጨማሪ ምዝገባ አያስፈልግም።</p></div><div class="btn-row no-print"><button class="btn" onclick="printServiceReport('page-finished')">🖨️ Print</button></div></div>
+      <div class="sgc-flow-grid">
+        <div class="sgc-flow-kpi"><small>አጠቃላይ ያለቀለት ፕሮዳክት</small><strong id="sgcFinishedTotal">0 pcs</strong></div>
+        <div class="sgc-flow-kpi"><small>የያለቀለት ፕሮዳክት ዋጋ</small><strong id="sgcFinishedValue">0 ETB</strong></div>
+        <div class="sgc-flow-kpi"><small>ከታሸገ ላይ የቀረ</small><strong id="sgcFinishedAvailable">0 pcs</strong></div>
+      </div>
+      <div class="sgc-flow-card"><h3>ያለቀለት ምርት ስቶክ</h3><p class="muted">ይህ ገጽ በአውቶማቲክ ይመዘገባል።</p><div class="sgc-flow-table"><table><thead><tr><th>የምርት ስም</th><th>የታሸገ</th><th>የተሸጠ</th><th>ያለቀለት ስቶክ</th><th>ዋጋ</th></tr></thead><tbody id="sgcFinishedBody"></tbody></table></div></div>`;
+    $('businessApp')?.querySelector('.content')?.appendChild(page);
+  }
+}
+function sgcRenderPackingAndFinished(){
+  if(!nonWeekly())return;
+  ensurePackingLedger();ensurePackingPage();ensureFinishedPage();syncFinishedProductStock();
+  refreshSewingRowsAfterPacking();
+  const products=appState.products||[];
+  const lineTotal=products.reduce((a,p)=>a+lineInTotal(p.id),0);
+  const lineValue=products.reduce((a,p)=>a+lineInTotal(p.id)*num(p.unitPrice),0);
+  $('sgcLineInTotal').textContent=lineTotal.toLocaleString()+' pcs';
+  $('sgcLineInValue').textContent=money(lineValue);
+  $('sgcPackedTotal').textContent=totalPackedQty().toLocaleString()+' pcs';
+  const body=$('sgcPackingSummaryBody');
+  if(body)body.innerHTML=products.filter(p=>lineInTotal(p.id)>0).map(p=>{
+    const line=lineInTotal(p.id),packed=packedTotal(p.id),rem=Math.max(0,line-packed);
+    return `<tr><td><strong>${esc(p.name)}</strong></td><td>${line.toLocaleString()} pcs</td><td>${money(line*num(p.unitPrice))}</td><td>${packed.toLocaleString()} pcs</td><td>${rem.toLocaleString()} pcs</td><td>${money(rem*num(p.unitPrice))}</td></tr>`;
+  }).join('')||'<tr><td colspan="6">እስካሁን ወደ ስፌት የገባ መረጃ የለም።</td></tr>';
+  const finishedBody=$('sgcFinishedBody');
+  if(finishedBody)finishedBody.innerHTML=products.filter(p=>packedTotal(p.id)>0).map(p=>{
+    const packed=packedTotal(p.id),sold=(appState.sales||[]).filter(s=>(s.productId===p.id)||s.productName===p.name).reduce((a,s)=>a+num(s.qty),0),finished=Math.max(0,packed-sold);
+    return `<tr><td><strong>${esc(p.name)}</strong></td><td>${packed.toLocaleString()} pcs</td><td>${sold.toLocaleString()} pcs</td><td><strong>${finished.toLocaleString()} pcs</strong></td><td>${money(finished*num(p.unitPrice))}</td></tr>`;
+  }).join('')||'<tr><td colspan="5">እስካሁን የታሸገ ምርት የለም።</td></tr>';
+  const totalFinished=products.reduce((a,p)=>a+num(p.finishedStockQty),0);
+  const finishedValue=products.reduce((a,p)=>a+num(p.finishedStockQty)*num(p.unitPrice),0);
+  $('sgcFinishedTotal').textContent=totalFinished.toLocaleString()+' pcs';
+  $('sgcFinishedValue').textContent=money(finishedValue);
+  $('sgcFinishedAvailable').textContent=totalFinished.toLocaleString()+' pcs';
+}
+window.sgсRenderPackingAndFinished=sgcRenderPackingAndFinished; // harmless alias typo-proofing
+window.sgcRenderPackingAndFinished=sgcRenderPackingAndFinished;
+
+/* ---------- FINISHED STOCK SOURCE FOR SALES ---------- */
+function finishedAvailableByName(name){
+  if(!nonWeekly())return null;
+  ensurePackingLedger();syncFinishedProductStock();
+  const p=(appState.products||[]).find(x=>x.name===name);
+  return p?Math.max(0,num(p.finishedStockQty)):0;
+}
+const originalAvailableProductQty=window.availableProductQty;
+window.availableProductQty=function(name){
+  if(!nonWeekly())return typeof originalAvailableProductQty==='function'?originalAvailableProductQty(name):0;
+  return finishedAvailableByName(name);
+};
+
+/* After the existing sales modal builds itself, restrict its product list to finished stock only. */
+const originalOpenSalesModal=window.openSalesModal;
+window.openSalesModal=function(editId=null){
+  if(!nonWeekly())return typeof originalOpenSalesModal==='function'?originalOpenSalesModal.apply(this,arguments):undefined;
+  ensurePackingLedger();syncFinishedProductStock();
+  if(!originalOpenSalesModal)return;
+  originalOpenSalesModal.apply(this,arguments);
+  const sel=$('saleProductId');if(!sel)return;
+  const current=sel.value;
+  const oldSale=editId?(appState.sales||[]).find(x=>x.id===editId):null;
+  const products=(appState.products||[]).filter(p=>Math.max(0,num(p.finishedStockQty))>0 || (oldSale&&(oldSale.productId===p.id||oldSale.productName===p.name)));
+  sel.innerHTML=products.map(p=>`<option value="${esc(p.id)}">${esc(p.name)} — ${Math.max(0,num(p.finishedStockQty))} pcs ${tr('ያለቀለት','finished')}</option>`).join('');
+  if(oldSale)sel.value=oldSale.productId||products.find(p=>p.name===oldSale.productName)?.id||'';
+  else if(current&&products.some(p=>p.id===current))sel.value=current;
+  if(!sel.value && products[0])sel.value=products[0].id;
+  if(!products.length){
+    closeAppModal();showToast(tr('በያለቀለት ፕሮዳክት ስቶክ ውስጥ ለሽያጭ የሚገኝ ምርት የለም።','No finished product is available for sale.'));
+    return;
+  }
+  if(typeof autoFillSalePrice==='function')autoFillSalePrice(sel.value);
+};
+
+/* Sales and finished stock stay synchronized for non-weekly packages. */
+const originalSaveSale=window.saveSaleRecord;
+window.saveSaleRecord=function(e,editId=''){
+  if(!nonWeekly())return typeof originalSaveSale==='function'?originalSaveSale.apply(this,arguments):undefined;
+  ensurePackingLedger();syncFinishedProductStock();
+  const result=typeof originalSaveSale==='function'?originalSaveSale.apply(this,arguments):undefined;
+  syncFinishedProductStock();sgcRenderPackingAndFinished();
+  return result;
+};
+const originalDeleteSale=window.deleteSale;
+window.deleteSale=function(id){
+  if(!nonWeekly())return typeof originalDeleteSale==='function'?originalDeleteSale.apply(this,arguments):undefined;
+  const r=typeof originalDeleteSale==='function'?originalDeleteSale.apply(this,arguments):undefined;
+  syncFinishedProductStock();sgcRenderPackingAndFinished();return r;
+};
+
+/* ---------- SEWING: packed quantity becomes the completed/remaining flow ---------- */
+const originalOpenSewing=window.sgcOpenSewingModal;
+window.sgcOpenSewingModal=function(id=''){
+  if(!nonWeekly())return typeof originalOpenSewing==='function'?originalOpenSewing.apply(this,arguments):undefined;
+  ensurePackingLedger();
+  if(typeof originalOpenSewing==='function')originalOpenSewing.apply(this,arguments);
+  const complete=$('sgcSComplete');
+  if(complete){
+    complete.value=id?num((appState.sewing||[]).find(x=>x.id===id)?.completed):0;
+    complete.readOnly=true;
+    complete.title='በማሸግ ገጽ ብቻ ይመዘገባል';
+  }
+  const lab=complete?.closest('.field')?.querySelector('label');
+  if(lab)lab.textContent='በማሸግ የተጠናቀቀ / የታሸገ ብዛት (Automatic)';
+};
+const originalSaveSewing=window.sgcSaveSewing;
+window.sgcSaveSewing=function(e,id=''){
+  if(!nonWeekly())return typeof originalSaveSewing==='function'?originalSaveSewing.apply(this,arguments):undefined;
+  // The sewing form may still carry a previous completed value; packing is the authority.
+  const complete=$('sgcSComplete');
+  const savedComplete=complete?.value;
+  if(complete)complete.value='0';
+  const result=typeof originalSaveSewing==='function'?originalSaveSewing.apply(this,arguments):undefined;
+  if(complete)complete.value=savedComplete||'0';
+  ensurePackingLedger();syncFinishedProductStock();sgcRenderPackingAndFinished();
+  return result;
+};
+const originalDeleteSewing=window.sgcDeleteSewing;
+window.sgcDeleteSewing=function(id){
+  if(!nonWeekly())return typeof originalDeleteSewing==='function'?originalDeleteSewing.apply(this,arguments):undefined;
+  ensurePackingLedger();
+  const packed=(appState.packingRecords||[]).filter(x=>x.sewingId===id).reduce((a,x)=>a+num(x.qty),0);
+  if(packed>0){showToast(tr('ይህ የስፌት መዝገብ ቀድሞ ማሸጊያ አለው፤ መጀመሪያ የማሸጊያ መረጃን አስተካክሉ።','This sewing record already has packing history and cannot be deleted.'));return;}
+  const result=typeof originalDeleteSewing==='function'?originalDeleteSewing.apply(this,arguments):undefined;
+  sgcRenderPackingAndFinished();return result;
+};
+
+/* ---------- STOCK TOTAL KG + VALUE ---------- */
+function ensureStockTotals(){
+  if(!nonWeekly())return;
+  const page=$('page-stock');if(!page)return;
+  let box=$('sgcStockTotalsBox');
+  if(!box){
+    box=document.createElement('div');box.id='sgcStockTotalsBox';box.className='sgc-flow-grid';
+    box.innerHTML='<div class="sgc-flow-kpi"><small>አጠቃላይ እስቶክ ኪሎ</small><strong id="sgcStockTotalKg">0 Kg</strong></div><div class="sgc-flow-kpi"><small>አጠቃላይ የኪሎ ዋጋ</small><strong id="sgcStockTotalValue">0 ETB</strong></div><div class="sgc-flow-kpi"><small>የእስቶክ የአማካይ ኪሎ ዋጋ</small><strong id="sgcStockAvgKg">0 ETB/Kg</strong></div>';
+    const anchor=page.querySelector('.section-head');if(anchor)anchor.insertAdjacentElement('afterend',box);else page.prepend(box);
+  }
+  const kg=(appState.stock||[]).reduce((a,x)=>a+Math.max(0,num(x.qtyKg)),0);
+  const value=(appState.stock||[]).reduce((a,x)=>a+Math.max(0,num(x.qtyKg))*Math.max(0,num(x.unitCostKg)),0);
+  $('sgcStockTotalKg').textContent=kg.toLocaleString(undefined,{maximumFractionDigits:2})+' Kg';
+  $('sgcStockTotalValue').textContent=money(value);
+  $('sgcStockAvgKg').textContent=kg?money(value/kg)+'/Kg':'0 ETB/Kg';
+}
+
+/* ---------- MENU ORDER: ONLY NON-WEEKLY ---------- */
+function ensureWorkflowMenuOrder(){
+  if(!nonWeekly())return;
+  const sidebar=document.querySelector('.sidebar');if(!sidebar)return;
+  const mainTitle=sidebar.querySelector('.nav-title');
+  if(!mainTitle)return;
+  ensurePackingPage();ensureFinishedPage();
+  const ensureNavButton=(key,icon,label)=>{
+    let b=Array.from(document.querySelectorAll('.sidebar .nav-btn')).find(x=>(x.getAttribute('onclick')||'').includes("switchPage('"+key+"')"));
+    if(!b){
+      b=document.createElement('button');b.className='nav-btn';b.setAttribute('onclick',"switchPage('"+key+"')");
+      b.innerHTML='<span class="nav-icon">'+icon+'</span> <span>'+label+'</span>';
+      const toolsTitle=sidebar.querySelector('[data-i18n="nav_tools"]');
+      (toolsTitle||sidebar.querySelector('.side-footer'))?.insertAdjacentElement('beforebegin',b);
+    }
+    return b;
+  };
+  ensureNavButton('packing','📦','የታሸገ ፕሮዳክት');
+  ensureNavButton('finished','🏁','ያለቀለት ፕሮዳክት');
+  // Sewing/cutting may be injected by existing modules; this runs repeatedly until they exist.
+  const wanted=['stock','expenses','cutting','production','sewing','packing','finished','sales','reports'];
+  const buttonFor=key=>{
+    return Array.from(document.querySelectorAll('.sidebar .nav-btn')).find(b=>(b.getAttribute('onclick')||'').includes("switchPage('"+key+"')"))||null;
+  };
+  const dashboard=Array.from(document.querySelectorAll('.sidebar .nav-btn')).find(b=>(b.getAttribute('onclick')||'').includes("switchPage('dashboard')"))||null;
+  if(dashboard)mainTitle.insertAdjacentElement('afterend',dashboard);
+  let anchor=dashboard||mainTitle;
+  wanted.forEach(key=>{
+    const b=buttonFor(key);
+    if(b){anchor.insertAdjacentElement('afterend',b);anchor=b;}
+  });
+  // Put remaining tools after the requested workflow sequence without deleting them.
+  const workflowButtons=new Set([dashboard,...wanted.map(buttonFor).filter(Boolean)]);
+  let moreTitle=sidebar.querySelector('#sgcMoreToolsTitle');
+  if(!moreTitle){
+    moreTitle=document.createElement('div');moreTitle.id='sgcMoreToolsTitle';moreTitle.className='nav-title';moreTitle.textContent='MORE TOOLS';
+    const last=buttonFor('reports')||anchor;
+    if(last)last.insertAdjacentElement('afterend',moreTitle);else sidebar.appendChild(moreTitle);
+  }
+  // Move non-workflow nav buttons below MORE TOOLS, preserving their relative order.
+  let moreAnchor=moreTitle;
+  Array.from(sidebar.querySelectorAll('.nav-btn')).forEach(b=>{
+    const onclick=b.getAttribute('onclick')||'';
+    const keyMatch=onclick.match(/switchPage\\('([^']+)'\\)/);
+    const key=keyMatch?.[1]||'';
+    if(!['dashboard',...wanted].includes(key)){
+      moreAnchor.insertAdjacentElement('afterend',b);moreAnchor=b;
+    }
+  });
+}
+function refreshNonWeeklyUI(){
+  if(!nonWeekly())return;
+  ensurePackingLedger();ensurePackingPage();ensureFinishedPage();
+  syncFinishedProductStock();refreshSewingRowsAfterPacking();sgcRenderPackingAndFinished();
+  ensureStockTotals();ensureWorkflowMenuOrder();
+}
+
+/* ---------- SETTINGS / EXIT GUARD ---------- */
+function hideExitControls(){
+  document.querySelectorAll('#sgcLogoutPanel,#cpReregisterPanel,#cpPortalReregisterBtn,#sgcLogoutBtn').forEach(el=>el.remove());
+  document.querySelectorAll('#page-settings button,.sgc-settings-actions button').forEach(btn=>{
+    const t=(btn.textContent||'').toLowerCase();
+    if(/log\s*out|logout|ከሲስተሙ ውጣ|እንደገና|re-register|start new registration/.test(t))btn.remove();
+  });
+}
+function guardExit(){
+  hideExitControls();
+  if(typeof window.forgetRegisteredPhoneAndReregister==='function'){
+    window.forgetRegisteredPhoneAndReregister=function(){
+      showToast(tr('ሳምንታዊ ፓኬጅ እንዳይነካ የምዝገባ ማጥፋት አልተፈቀደም።','Registration reset is disabled while using the business system.'));
+    };
+  }
+  document.addEventListener('click',function(e){
+    const btn=e.target.closest('#sgcLogoutBtn,#cpPortalReregisterBtn');
+    if(btn){e.preventDefault();e.stopImmediatePropagation();hideExitControls();return false;}
+  },true);
+}
+function packageAwareSwitchGuard(){
+  const orig=window.switchPage;
+  if(typeof orig!=='function'||orig.__finalPackageGuard)return;
+  const wrapped=function(pageKey){
+    const key=String(pageKey||'');
+    if(!nonWeekly() && /^(packing|finished|cutting|sewing)$/.test(key))return;
+    return orig.apply(this,arguments);
+  };
+  wrapped.__finalPackageGuard=true;window.switchPage=wrapped;
+}
+function init(){
+  guardExit();packageAwareSwitchGuard();
+  if(nonWeekly())refreshNonWeeklyUI();
+  // Weekly is deliberately left alone: no packing/finished pages or workflow-menu reorder is applied.
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+setInterval(()=>{try{
+  guardExit();packageAwareSwitchGuard();
+  if(nonWeekly())refreshNonWeeklyUI();
+}catch(e){console.warn('Final non-weekly workflow:',e)}},1800);
+})();
+</script>
+
 </body>
 </html>
